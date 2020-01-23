@@ -19,6 +19,8 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
     this.mCompiledShader = null;  // reference to the compiled shader in webgl context  
     this.mShaderVertexPositionAttribute = null; // reference to SquareVertexPosition within the shader
     this.mPixelColor = null;                    // reference to the pixelColor uniform in the fragment shader
+    this.mOffset = null;
+    this.mScale = null;
 
     var gl = gEngine.Core.getGL();
 
@@ -57,6 +59,8 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
 
     // Step G: Gets a reference to the uniform variable uPixelColor in the fragment shader
     this.mPixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
+    this.mOffset = gl.getUniformLocation(this.mCompiledShader, "uPixelOffset");
+    this.mScale = gl.getUniformLocation(this.mCompiledShader, "uScale");
 }
 //</editor-fold>
 
@@ -65,8 +69,17 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
 // Access to the compiled shader
 SimpleShader.prototype.getShader = function () { return this.mCompiledShader; };
 
+SimpleShader.prototype.setShaderPrimitive = function (vertexArray) {
+    var gl = gEngine.Core.getGL();
+    var vertexBuffer = gEngine.VertexBuffer.getGLVertexRef()
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    // Step C: Loads verticesOfSquare into the vertexBuffer
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexArray), gl.STATIC_DRAW);
+}
+
 // Activate the shader for rendering
-SimpleShader.prototype.activateShader = function (pixelColor) {
+SimpleShader.prototype.activateShader = function (pixelColor, offset, scale) {
     var gl = gEngine.Core.getGL();
     gl.useProgram(this.mCompiledShader);
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLVertexRef());
@@ -78,6 +91,8 @@ SimpleShader.prototype.activateShader = function (pixelColor) {
         0);             // offsets to the first element
     gl.enableVertexAttribArray(this.mShaderVertexPositionAttribute);
     gl.uniform4fv(this.mPixelColor, pixelColor);
+    gl.uniform2fv(this.mOffset, offset);
+    gl.uniform2fv(this.mScale, scale);
 };
 //-- end of public methods
 // </editor-fold>

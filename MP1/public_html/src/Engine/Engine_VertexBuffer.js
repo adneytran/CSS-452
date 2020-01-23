@@ -18,7 +18,8 @@ var gEngine = gEngine || { };
 // The VertexBuffer object
 gEngine.VertexBuffer = (function () {
     // reference to the vertex positions for the square in the gl context
-    var mSquareVertexBuffer = null;
+    var mVertexBuffer = null;
+    const VERTICES_IN_CIRCLE = 60;
 
     // First: define the vertices for a square
     var verticesOfSquare = [
@@ -28,24 +29,51 @@ gEngine.VertexBuffer = (function () {
         -0.5, -0.5, 0.0
     ];
 
+    var verticesOfTriangle = [
+        0.0, 0.5, 0.0,
+        -0.5, -0.5, 0.0,
+        0.5, -0.5, 0.0
+    ]
+
+
+    var getCircleArray = function (n) {
+        let arr = [];
+        let i;
+        for (i = 0; i < n; i++) {
+            let rad = (Math.PI / 180) * i * (360 / n);
+            arr.push(Math.cos(rad) / 2)
+            arr.push(Math.sin(rad) / 2)
+            arr.push(0);
+        }
+        return arr;
+    }
+
+    var verticesOfCircle = getCircleArray(VERTICES_IN_CIRCLE);
+
     var initialize = function () {
         var gl = gEngine.Core.getGL();
 
         // Step A: Create a buffer on the gGL context for our vertex positions
-        mSquareVertexBuffer = gl.createBuffer();
+        mVertexBuffer = gl.createBuffer();
 
         // Step B: Activate vertexBuffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, mSquareVertexBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, mVertexBuffer);
 
         // Step C: Loads verticesOfSquare into the vertexBuffer
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesOfSquare), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesOfCircle), gl.STATIC_DRAW);
     };
 
-    var getGLVertexRef = function () { return mSquareVertexBuffer; };
+    var getGLVertexRef = function () { return mVertexBuffer; };
+    var getSquareVertices = function () { return verticesOfSquare; };
+    var getTriangleVertices = function () { return verticesOfTriangle; };
+    var getCircleVertices = function () { return verticesOfCircle; };
 
     var mPublic = {
         initialize: initialize,
-        getGLVertexRef: getGLVertexRef
+        getGLVertexRef: getGLVertexRef,
+        getSquareVertices: getSquareVertices,
+        getTriangleVertices: getTriangleVertices,
+        getCircleVertices: getCircleVertices
     };
 
     return mPublic;
