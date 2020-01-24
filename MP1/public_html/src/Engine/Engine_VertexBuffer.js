@@ -22,7 +22,7 @@ gEngine.VertexBuffer = (function () {
     const VERTICES_IN_CIRCLE = 60;
 
     // First: define the vertices for a square
-    var verticesOfSquare = [
+var verticesOfSquare = [
         0.5, 0.5, 0.0,
         -0.5, 0.5, 0.0,
         0.5, -0.5, 0.0,
@@ -48,6 +48,19 @@ gEngine.VertexBuffer = (function () {
         return arr;
     }
 
+    var verticesOfRainbowSquare = [
+        0.5, 0.5, 0.0, 1.0, 1.0, 0.0,
+        -0.5, 0.5, 0.0, 0.7, 0.0, 1.0,
+        0.5, -0.5, 0.0, 0.1, 1.0, 0.6,
+        -0.5, -0.5, 0.0, 0.5, 0.2, 0.9
+    ];
+
+    var verticesOfRainbowTriangle = [
+        0.0, 0.5, 0.0, 1.0, 1.0, 0.0,
+        -0.5, -0.5, 0.0, 0.7, 0.0, 1.0,
+        0.5, -0.5, 0.0, 0.1, 1.0, 0.6
+    ];
+
     var verticesOfCircle = getCircleArray(VERTICES_IN_CIRCLE);
 
     var initialize = function () {
@@ -67,13 +80,17 @@ gEngine.VertexBuffer = (function () {
     var getSquareVertices = function () { return verticesOfSquare; };
     var getTriangleVertices = function () { return verticesOfTriangle; };
     var getCircleVertices = function () { return verticesOfCircle; };
+    var getRainbowSquareVertices = function () { return verticesOfRainbowSquare; };
+    var getRainbowTriangleVertices = function () { return verticesOfRainbowTriangle; };
 
     var mPublic = {
         initialize: initialize,
         getGLVertexRef: getGLVertexRef,
         getSquareVertices: getSquareVertices,
         getTriangleVertices: getTriangleVertices,
-        getCircleVertices: getCircleVertices
+        getCircleVertices: getCircleVertices,
+        getRainbowSquareVertices: getRainbowSquareVertices,
+        getRainbowTriangleVertices: getRainbowTriangleVertices
     };
 
     return mPublic;

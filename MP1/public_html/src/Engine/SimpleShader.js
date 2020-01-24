@@ -94,6 +94,33 @@ SimpleShader.prototype.activateShader = function (pixelColor, offset, scale) {
     gl.uniform2fv(this.mOffset, offset);
     gl.uniform2fv(this.mScale, scale);
 };
+
+SimpleShader.prototype.activateColorfulShader = function (offset, scale) {
+    var gl = gEngine.Core.getGL();
+    gl.useProgram(this.mCompiledShader);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLVertexRef());
+
+    var colorAttribute = gl.getAttribLocation(this.mCompiledShader, 'uPixelColor');
+
+    gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,
+        3,              // each element is a 3-float (x,y.z)
+        gl.FLOAT,       // data type is FLOAT
+        false,          // if the content is normalized vectors
+        6 * Float32Array.BYTES_PER_ELEMENT,              // number of bytes to skip in between elements
+        0);             // offsets to the first element
+
+    gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,
+        3,              // each element is a 3-float (r,g.b)
+        gl.FLOAT,       // data type is FLOAT
+        false,          // if the content is normalized vectors
+        6 * Float32Array.BYTES_PER_ELEMENT,            // number of bytes to skip in between elements
+        3);             // offsets to the first element
+
+    gl.enableVertexAttribArray(this.mShaderVertexPositionAttribute);
+    gl.enableVertexAttribArray(colorAttribute);
+    gl.uniform2fv(this.mOffset, offset);
+    gl.uniform2fv(this.mScale, scale);
+}
 //-- end of public methods
 // </editor-fold>
 
