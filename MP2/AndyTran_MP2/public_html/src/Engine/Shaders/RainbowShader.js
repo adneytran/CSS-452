@@ -13,6 +13,7 @@
 
 //<editor-fold desc="constructor">
 // constructor of SimpleShader object
+const RAINBOW_RATE = 125;
 function RainbowShader(vertexShaderPath, fragmentShaderPath) {
     // instance variables
     // Convention: all instance variables: mVariables
@@ -22,6 +23,7 @@ function RainbowShader(vertexShaderPath, fragmentShaderPath) {
     this.mModelTransform = null;                // reference to model transform matrix in vertex shader
     this.mViewProjTransform = null;             // reference to the View/Projection matrix in the vertex shader
     this.mVertexColorAttribute = null;
+    this.changeTime = 0;
 
     var gl = gEngine.Core.getGL();
 
@@ -45,20 +47,20 @@ function RainbowShader(vertexShaderPath, fragmentShaderPath) {
 
     // Step D: Gets a reference to the aSquareVertexPosition attribute within the shaders.
     this.mShaderVertexPositionAttribute = gl.getAttribLocation(
-        this.mCompiledShader, "aSquareVertexPosition");
+            this.mCompiledShader, "aSquareVertexPosition");
     this.mVertexColorAttribute = gl.getAttribLocation(
-        this.mCompiledShader, "aVertexColor");
+            this.mCompiledShader, "aVertexColor");
 
     // Step E: Activates the vertex buffer loaded in EngineCore_VertexBuffer.js
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getRainbowSquareVertexRef());
 
     // Step F: Describe the characteristic of the vertex position attribute
     gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,
-        3,              // each element is a 3-float (x,y.z)
-        gl.FLOAT,       // data type is FLOAT
-        false,          // if the content is normalized vectors
-        0,              // number of bytes to skip in between elements
-        0);             // offsets to the first element
+            3, // each element is a 3-float (x,y.z)
+            gl.FLOAT, // data type is FLOAT
+            false, // if the content is normalized vectors
+            0, // number of bytes to skip in between elements
+            0);             // offsets to the first element
 
     // Step G: Gets references to the uniform variables: uPixelColor, uModelTransform, and uViewProjTransform
     this.mPixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
@@ -70,7 +72,9 @@ function RainbowShader(vertexShaderPath, fragmentShaderPath) {
 // <editor-fold desc="Public Methods">
 
 // Access to the compiled shader
-RainbowShader.prototype.getShader = function () { return this.mCompiledShader; };
+RainbowShader.prototype.getShader = function () {
+    return this.mCompiledShader;
+};
 
 // Activate the shader for rendering
 RainbowShader.prototype.activateShader = function (pixelColor, vpMatrix) {
@@ -79,26 +83,35 @@ RainbowShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     gl.uniformMatrix4fv(this.mViewProjTransform, false, vpMatrix);
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getRainbowSquareVertexRef());
     gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,
-        3,              // each element is a 3-float (x,y.z)
-        gl.FLOAT,       // data type is FLOAT
-        false,          // if the content is normalized vectors
-        7 * Float32Array.BYTES_PER_ELEMENT,              // number of bytes to skip in between elements
-        0);             // offsets to the first element
+            3, // each element is a 3-float (x,y.z)
+            gl.FLOAT, // data type is FLOAT
+            false, // if the content is normalized vectors
+            7 * Float32Array.BYTES_PER_ELEMENT, // number of bytes to skip in between elements
+            0);             // offsets to the first element
     gl.enableVertexAttribArray(this.mShaderVertexPositionAttribute);
     gl.vertexAttribPointer(this.mVertexColorAttribute,
-        4,              // each element is a 4-float (r,g.b,a)
-        gl.FLOAT,       // data type is FLOAT
-        false,          // if the content is normalized vectors
-        7 * Float32Array.BYTES_PER_ELEMENT,              // number of bytes to skip in between elements
-        3 * Float32Array.BYTES_PER_ELEMENT);             // offsets to the first element
+            4, // each element is a 4-float (r,g.b,a)
+            gl.FLOAT, // data type is FLOAT
+            false, // if the content is normalized vectors
+            7 * Float32Array.BYTES_PER_ELEMENT, // number of bytes to skip in between elements
+            3 * Float32Array.BYTES_PER_ELEMENT);             // offsets to the first element
     gl.enableVertexAttribArray(this.mVertexColorAttribute);
-        gl.uniform4fv(this.mPixelColor, pixelColor);
+    gl.uniform4fv(this.mPixelColor, pixelColor);
+};
+
+RainbowShader.prototype.drawNewRainbow = function () {
+    var gl = gEngine.Core.getGL();
+    this.changeTime += gEngine.GameLoop.getMPF();
+    if (this.changeTime > RAINBOW_RATE) {
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(gEngine.VertexBuffer.getRainbowSquare()), gl.STATIC_DRAW);
+        this.changeTime = 0;
+    }
 };
 
 // Loads per-object model transform to the vertex shader
 RainbowShader.prototype.loadObjectTransform = function (modelTransform) {
     var gl = gEngine.Core.getGL();
-        // loads the modelTransform matrix into webGL to be used by the vertex shader
+    // loads the modelTransform matrix into webGL to be used by the vertex shader
     gl.uniformMatrix4fv(this.mModelTransform, false, modelTransform);
 };
 

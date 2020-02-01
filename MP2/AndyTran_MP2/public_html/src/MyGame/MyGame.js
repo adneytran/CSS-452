@@ -51,11 +51,13 @@ MyGame.prototype.initialize = function () {
     // Step  C: Create the Renderable objects:
     this.mCursor = new Renderable(this.mConstColorShader);
     this.mCursor.setColor([1, 0, 0, 1]);
-
+    this.mShiny = new Renderable(this.mShinyShader);
     // Step  E: Initialize the red Renderable object: centered 1x1
     this.mCursor.getXform().setPosition(0, 0);
     this.mCursor.getXform().setSize(1, 1);
 
+    this.mShiny.getXform().setPosition(0, 0);
+    this.mShiny.getXform().setSize(0, 0);
     // Step F: Start the game loop running
     gEngine.GameLoop.start(this);
 };
@@ -72,6 +74,7 @@ MyGame.prototype.draw = function () {
         this.squareGroupArray[i].drawSquares(this.mCamera.getVPMatrix());
     }
     this.mCursor.draw(this.mCamera.getVPMatrix());
+    this.mShiny.draw(this.mCamera.getVPMatrix());
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
@@ -82,6 +85,9 @@ MyGame.prototype.update = function () {
     this.inputDeleteMode();
     this.checkIfSquaresAlive();
     this.echoTextInfo();
+    
+    this.mShinyShader.drawNewRainbow();
+    this.rotateShinySquares();
 };
 
 MyGame.prototype.inputCursorPosition = function () {
@@ -104,8 +110,8 @@ MyGame.prototype.inputCursorPosition = function () {
 
 MyGame.prototype.inputSpawnSquares = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
-        var squares = new SquareGroup(this.mCursor.getXform().getPosition(), 
-        this.mConstColorShader, this.mShinyShader);
+        var squares = new SquareGroup(this.mCursor.getXform().getPosition(),
+                this.mConstColorShader, this.mShinyShader);
         this.squareGroupArray.push(squares);
         this.totalNumberOfSquares += squares.numberOfSquares;
     }
@@ -142,12 +148,13 @@ MyGame.prototype.checkIfSquaresAlive = function () {
     }
 };
 
+MyGame.prototype.rotateShinySquares = function() {
+    for (var i = 0; i < SquareGroup.shinySquares.length; i++) {
+        SquareGroup.shinySquares[i].getXform().incRotationByDegree(3);
+    } 
+};
+
 MyGame.prototype.echoTextInfo = function () {
-    document.getElementById('timeToUpdate').innerHTML = gEngine.GameLoop.getMPF();
-    document.getElementById('FPS').innerHTML = gEngine.GameLoop.getFPS();
-    document.getElementById('updateCounter').innerHTML = gEngine.GameLoop.getUpdateCounter();
-    document.getElementById('lagTime').innerHTML = gEngine.GameLoop.getLagTime();
-    document.getElementById('totalNumObjects').innerHTML = this.totalNumberOfSquares;
-    document.getElementById('deleteMode').innerHTML = this.deleteMode;
+    gUpdateObject(this.totalNumberOfSquares, this.deleteMode);
     document.getElementById('shinyChance').innerHTML = SquareGroup.shinyChance;
 };

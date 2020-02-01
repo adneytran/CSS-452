@@ -30,13 +30,6 @@ gEngine.VertexBuffer = (function () {
         -0.5, -0.5, 0.0
     ];
 
-    var verticesOfRainbowSquare = [
-        0.5, 0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
-        -0.5, 0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
-        0.5, -0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
-        -0.5, -0.5, 0.0, Math.random(), Math.random(), Math.random(), 1
-    ];
-
     var colorBuffer = [Math.random(), Math.random(), Math.random(), 1.0];
 
     var initialize = function () {
@@ -58,7 +51,7 @@ gEngine.VertexBuffer = (function () {
         
         mRainbowSquareVertexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, mRainbowSquareVertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesOfRainbowSquare), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(getRainbowSquare()), gl.STATIC_DRAW);
     };
 
     var getSolidSquareVertexRef = function () {
@@ -72,11 +65,21 @@ gEngine.VertexBuffer = (function () {
         return mColorBuffer;
     };
 
+    var getRainbowSquare = function() {
+        return [
+        0.5, 0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
+        -0.5, 0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
+        0.5, -0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
+        -0.5, -0.5, 0.0, Math.random(), Math.random(), Math.random(), 1
+    ];
+    }
+
     var mPublic = {
         initialize: initialize,
         getSolidSquareVertexRef: getSolidSquareVertexRef,
         getRainbowSquareVertexRef: getRainbowSquareVertexRef,
-        getColorBuffer: getColorBuffer
+        getColorBuffer: getColorBuffer,
+        getRainbowSquare: getRainbowSquare
     };
 
     return mPublic;

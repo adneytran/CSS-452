@@ -47,6 +47,7 @@ gEngine.GameLoop = (function () {
             }
 
             // Step D: now let's draw
+            gUpdateFrame(elapsedTime, updateCounter, mLagTime)
             updateCounter = 0;
             this.draw();    // Call MyGame.draw()
         }

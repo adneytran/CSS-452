@@ -13,6 +13,7 @@ function SquareGroup(initialPos, shader, shinyShader)
 
 SquareGroup.totalSquares = 0;
 SquareGroup.shinyChance = 0;
+SquareGroup.shinySquares = [];
 
 SquareGroup.prototype.generateRandomSquares = function () {
     var i;
@@ -31,10 +32,9 @@ SquareGroup.prototype.renderSquare = function () {
     var newSquare = null;
     var shinyRoll = 100 * Math.random();
 
-    console.log('chance ' + SquareGroup.shinyChance);
-    console.log('roll ' + shinyRoll);
     if (shinyRoll < SquareGroup.shinyChance) {
         newSquare = new Renderable(this.mShinyShader);
+        SquareGroup.shinySquares.push(newSquare);
         this.resetShinyChance();
     } else {
         newSquare = new Renderable(this.mConstColorShader);
@@ -51,6 +51,10 @@ SquareGroup.prototype.getSquares = function () {
     return this.squareArray;
 };
 
+SquareGroup.prototype.getShinySquares = function () {
+    return this.shinySquares;
+};
+
 SquareGroup.prototype.drawSquares = function (VPMatrix) {
     var i;
     for (i = 0; i < this.squareArray.length; i++) {
@@ -64,7 +68,7 @@ SquareGroup.prototype.getNumberOfSquares = function () {
 
 SquareGroup.prototype.updateShinyChance = function () {
     SquareGroup.totalSquares += this.numberOfSquares;
-    SquareGroup.shinyChance = SquareGroup.totalSquares / 50;
+    SquareGroup.shinyChance = SquareGroup.totalSquares / 200;
 };
 
 SquareGroup.prototype.resetShinyChance = function () {

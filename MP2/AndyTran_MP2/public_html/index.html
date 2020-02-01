@@ -4,7 +4,7 @@
         <title>Square Spawner</title>
         <link rel ="icon" type ="image/x-icon" href="./favicon.png">
 
-        <!-- the following says there are javascript source code contained in 
+        <!-- the following says there are javascript source code contained in
              the external source files
         -->
         <!-- external library -->
@@ -24,8 +24,8 @@
         <script type="text/javascript" src="src/Engine/Camera.js"></script>
 
         <!-- Client game code -->
-        <script type="text/javascript" src="src/MyGame/MyGame.js"></script> 
-        <script type="text/javascript" src="src/MyGame/SquareGroup.js"></script> 
+        <script type="text/javascript" src="src/MyGame/MyGame.js"></script>
+        <script type="text/javascript" src="src/MyGame/SquareGroup.js"></script>
     </head>
 
     <body onload="new MyGame('GLCanvas');">
@@ -35,24 +35,31 @@
             <!-- this message will show only if WebGL clearing failed -->
         </canvas>
 
-        <div><strong>Time to update/draw: </strong>
-            <span id="timeToUpdate" >  </span> <span>milliseconds </span>
-        </div>
-        <div><strong>Frames per second: </strong>
-            <span id="FPS"> </span>
-        </div>
-        <div><strong>Num Update() calls per draw: </strong>
-            <span id="updateCounter"> </span>
-        </div>
-        <div><strong>Lag Time: </strong>
-            <span id="lagTime"> </span>
-        </div>
-        <div><strong>Total num objects: </strong>
-            <span id="totalNumObjects"> </span>
-        </div>
-        <div><strong>Delete Mode: </strong>
-            <span id="deleteMode"> </span>
-        </div>
+        <br>
+        <div id = 'UpdateFrame'></div>
+        <hr>
+        <div id = 'UpdateObject'></div>
+
+
+        <script>
+            var gUpdateFrame = function (elapsed, numUpdatePerDraw, lagTime) {
+                var elm = document.getElementById("UpdateFrame");
+                elm.innerHTML =
+                        "<b>Time to update/draw:</b>" + elapsed + " milliseconds<br>" +
+                        "<b>Frames per second: </b>" + (1000 / elapsed).toFixed(2) + "<br>" +
+                        "<b>Num Update() Calls per Draw(): </b>" + numUpdatePerDraw + "<br>" +
+                        "<b>Lag Time: </b>" + lagTime.toFixed(2) + " milliseconds<br>";
+            };
+
+            var gUpdateObject = function (n, deleteMode) {
+                var elm = document.getElementById("UpdateObject");
+                elm.innerHTML =
+                        "<b>Total num objects: </b>" + n + "<br>" +
+                        "<b>Delete mode=" + deleteMode;
+
+            };
+        </script>
+
         <div><strong>Shiny Chance: </strong>
             <span id="shinyChance"> </span> <span>% </span>
             <div><strong>Shiny chance resets on shiny spawning </strong>
