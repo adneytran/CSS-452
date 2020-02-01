@@ -13,11 +13,11 @@ var gEngine = gEngine || { };
 gEngine.GameLoop = (function () {
     var kFPS = 60;          // Frames per second
     var kMPF = 1000 / kFPS; // Milliseconds per frame.
-
+    var updateCounter = 0;  // number of updates before each draw
+    
     // Variables for timing gameloop.
     var mPreviousTime = Date.now();
     var mLagTime;
-
 
     // The current loop state (running or should stop)
     var mIsLoopRunning = false;
@@ -43,9 +43,11 @@ gEngine.GameLoop = (function () {
                 gEngine.Input.update();
                 this.update();      // call MyGame.update()
                 mLagTime -= kMPF;
+                updateCounter++;
             }
 
             // Step D: now let's draw
+            updateCounter = 0;
             this.draw();    // Call MyGame.draw()
         }
     };
@@ -69,9 +71,17 @@ gEngine.GameLoop = (function () {
     // once stopped, tricky to start the loop
     // You should implement pausing of game in game update.
 
+    var getFPS = function () { return kFPS; };
+    var getMPF = function() { return kMPF; };
+    var getLagTime = function() { return mLagTime; };
+    var getUpdateCounter = function() { return updateCounter; };
+
     var mPublic = {
-        start: start
+        start: start,
+        getFPS: getFPS,
+        getMPF: getMPF,
+        getLagTime: getLagTime,
+        getUpdateCounter: getUpdateCounter
     };
     return mPublic;
-
 }());

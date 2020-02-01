@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 4.2: The Keyboard Support Project</title>
+        <title>Square Spawner</title>
         <link rel ="icon" type ="image/x-icon" href="./favicon.png">
 
         <!-- the following says there are javascript source code contained in 
@@ -9,6 +9,7 @@
         -->
         <!-- external library -->
         <script type="text/javascript" src="src/lib/gl-matrix.js"></script>
+        <script type="text/javascript" src="src/lib/Random.js"></script>
 
         <!-- Engine code -->
         <!-- Core of Engine -->
@@ -16,13 +17,15 @@
         <script type="text/javascript" src="src/Engine/Core/Engine_VertexBuffer.js"></script>
         <script type="text/javascript" src="src/Engine/Core/Engine_GameLoop.js"></script>
         <script type="text/javascript" src="src/Engine/Core/Engine_Input.js"></script>
-        <script type="text/javascript" src="src/Engine/SimpleShader.js"></script>
+        <script type="text/javascript" src="src/Engine/Shaders/SimpleShader.js"></script>
+        <script type="text/javascript" src="src/Engine/Shaders/RainbowShader.js"></script>
         <script type="text/javascript" src="src/Engine/Renderable.js"></script>
         <script type="text/javascript" src="src/Engine/Transform.js"></script>
         <script type="text/javascript" src="src/Engine/Camera.js"></script>
 
         <!-- Client game code -->
         <script type="text/javascript" src="src/MyGame/MyGame.js"></script> 
+        <script type="text/javascript" src="src/MyGame/SquareGroup.js"></script> 
     </head>
 
     <body onload="new MyGame('GLCanvas');">
@@ -31,6 +34,28 @@
             Your browser does not support the HTML5 canvas.
             <!-- this message will show only if WebGL clearing failed -->
         </canvas>
-            
+
+        <div><strong>Time to update/draw: </strong>
+            <span id="timeToUpdate" >  </span> <span>milliseconds </span>
+        </div>
+        <div><strong>Frames per second: </strong>
+            <span id="FPS"> </span>
+        </div>
+        <div><strong>Num Update() calls per draw: </strong>
+            <span id="updateCounter"> </span>
+        </div>
+        <div><strong>Lag Time: </strong>
+            <span id="lagTime"> </span>
+        </div>
+        <div><strong>Total num objects: </strong>
+            <span id="totalNumObjects"> </span>
+        </div>
+        <div><strong>Delete Mode: </strong>
+            <span id="deleteMode"> </span>
+        </div>
+        <div><strong>Shiny Chance: </strong>
+            <span id="shinyChance"> </span> <span>% </span>
+            <div><strong>Shiny chance resets on shiny spawning </strong>
+            </div>
     </body>
 </html>

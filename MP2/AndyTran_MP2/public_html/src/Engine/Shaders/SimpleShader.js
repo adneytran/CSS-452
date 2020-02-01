@@ -47,7 +47,7 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
         this.mCompiledShader, "aSquareVertexPosition");
 
     // Step E: Activates the vertex buffer loaded in EngineCore_VertexBuffer.js
-    gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLVertexRef());
+    gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getSolidSquareVertexRef());
 
     // Step F: Describe the characteristic of the vertex position attribute
     gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,
@@ -75,7 +75,7 @@ SimpleShader.prototype.activateShader = function (pixelColor, vpMatrix) {
     var gl = gEngine.Core.getGL();
     gl.useProgram(this.mCompiledShader);
     gl.uniformMatrix4fv(this.mViewProjTransform, false, vpMatrix);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLVertexRef());
+    gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getSolidSquareVertexRef());
     gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,
         3,              // each element is a 3-float (x,y.z)
         gl.FLOAT,       // data type is FLOAT

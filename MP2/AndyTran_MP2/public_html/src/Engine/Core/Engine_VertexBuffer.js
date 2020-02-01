@@ -13,12 +13,14 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-var gEngine = gEngine || { };
+var gEngine = gEngine || {};
 
 // The VertexBuffer object
 gEngine.VertexBuffer = (function () {
     // reference to the vertex positions for the square in the gl context
     var mSquareVertexBuffer = null;
+    var mRainbowSquareVertexBuffer = null;
+    var mColorBuffer = null;
 
     // First: define the vertices for a square
     var verticesOfSquare = [
@@ -27,6 +29,15 @@ gEngine.VertexBuffer = (function () {
         0.5, -0.5, 0.0,
         -0.5, -0.5, 0.0
     ];
+
+    var verticesOfRainbowSquare = [
+        0.5, 0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
+        -0.5, 0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
+        0.5, -0.5, 0.0, Math.random(), Math.random(), Math.random(), 1,
+        -0.5, -0.5, 0.0, Math.random(), Math.random(), Math.random(), 1
+    ];
+
+    var colorBuffer = [Math.random(), Math.random(), Math.random(), 1.0];
 
     var initialize = function () {
         var gl = gEngine.Core.getGL();
@@ -39,13 +50,33 @@ gEngine.VertexBuffer = (function () {
 
         // Step C: Loads verticesOfSquare into the vertexBuffer
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesOfSquare), gl.STATIC_DRAW);
+
+        mColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, mColorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorBuffer), gl.STATIC_DRAW);
+        
+        
+        mRainbowSquareVertexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, mRainbowSquareVertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesOfRainbowSquare), gl.STATIC_DRAW);
     };
 
-    var getGLVertexRef = function () { return mSquareVertexBuffer; };
+    var getSolidSquareVertexRef = function () {
+        return mSquareVertexBuffer;
+    };
+
+    var getRainbowSquareVertexRef = function () {
+        return mRainbowSquareVertexBuffer;
+    };
+    var getColorBuffer = function () {
+        return mColorBuffer;
+    };
 
     var mPublic = {
         initialize: initialize,
-        getGLVertexRef: getGLVertexRef
+        getSolidSquareVertexRef: getSolidSquareVertexRef,
+        getRainbowSquareVertexRef: getRainbowSquareVertexRef,
+        getColorBuffer: getColorBuffer
     };
 
     return mPublic;
