@@ -10,10 +10,11 @@
 
 function MyGame() {
 }
+
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
 
-MyGame.prototype.unloadScene = function() {
+MyGame.prototype.unloadScene = function () {
     var nextLevel = new BlueLevel();  // next level to be loaded
     gEngine.Core.startScene(nextLevel);
 };
@@ -22,3 +23,11 @@ MyGame.prototype.initialize = function () {
     var firstLevel = new GrayLevel();
     gEngine.Core.startScene(firstLevel);
 };
+
+MyGame.prototype.update = function () {
+    inputSwitchScene();
+}
+
+MyGame.prototype.inputSwitchScene = function () {
+    if (gEngine.c)
+}
