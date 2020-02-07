@@ -74,7 +74,7 @@ MyGame.prototype.draw = function () {
         this.squareGroupArray[i].drawSquares(this.mCamera.getVPMatrix());
     }
     this.mCursor.draw(this.mCamera.getVPMatrix());
-    this.mShiny.draw(this.mCamera.getVPMatrix());
+    //this.mShiny.draw(this.mCamera.getVPMatrix());
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw

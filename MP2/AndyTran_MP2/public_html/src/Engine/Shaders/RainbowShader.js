@@ -13,7 +13,7 @@
 
 //<editor-fold desc="constructor">
 // constructor of SimpleShader object
-const RAINBOW_RATE = 125;
+const RAINBOW_RATE = 3000;
 function RainbowShader(vertexShaderPath, fragmentShaderPath) {
     // instance variables
     // Convention: all instance variables: mVariables
