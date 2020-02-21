@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac7fc678-3b92-4467-a10e-36a3be2884c3" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../AndyTran_MP3/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AndyTran_MP3/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/Engine/Camera.js" beforeDir="false" afterPath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/Engine/Camera.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/Engine/Core/Engine_Input.js" beforeDir="false" afterPath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/Engine/Core/Engine_Input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/MyGame/BlueLevel.js" beforeDir="false" afterPath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/MyGame/BlueLevel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/MyGame/GrayLevel.js" beforeDir="false" afterPath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/MyGame/GrayLevel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/MyGame/MyGame.js" beforeDir="false" afterPath="$PROJECT_DIR$/../AndyTran_MP3/public_html/src/MyGame/MyGame.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/src/MyGame/MyGame.js" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/src/MyGame/MyGame.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,11 +20,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="GradleLocalSettings">
-    <option name="externalProjectsViewState">
-      <projects_view />
-    </option>
   </component>
   <component name="ProjectId" id="1XTrYmdoSySEYwEXwoe7Y8cLFDy" />
   <component name="ProjectViewState">
@@ -27,7 +30,8 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../build-your-own-2d-game-engine/BookSourceCode/Chapter4/4.5.SceneObjects" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="Applet" factoryName="Applet">
@@ -38,78 +42,35 @@
       <module />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
+    <configuration default="true" type="TestNG">
       <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
       <properties />
       <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
       <option name="PROGRAM_PARAMETERS" />
-      <predefined_log_file id="idea.log" enabled="true" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
   </component>
   <component name="SvnConfiguration">
@@ -123,10 +84,23 @@
       <option name="presentableId" value="Default" />
       <updated>1581079877880</updated>
       <workItem from="1581080977749" duration="428000" />
+      <workItem from="1581123691558" duration="51000" />
+      <workItem from="1581337965267" duration="97000" />
+      <workItem from="1582250898110" duration="617000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1060" y="476" key="FileChooserDialogImpl" timestamp="1581338054188">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="1060" y="476" key="FileChooserDialogImpl/0.0.2560.1440@0.0.2560.1440" timestamp="1581338054188" />
+    <state x="976" y="545" key="com.intellij.ide.util.TipDialog" timestamp="1581338021812">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="976" y="545" key="com.intellij.ide.util.TipDialog/0.0.2560.1440@0.0.2560.1440" timestamp="1581338021812" />
   </component>
 </project>

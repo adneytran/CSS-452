@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5d46bbc1-8b0c-4e35-9a45-605e3a407ce5" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1Y66u145D3ShfhPJ5tVHVAmoD3v" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/GitHub/build-your-own-2d-game-engine/BookSourceCode/Chapter5/5.3.SpriteAnimation" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Adney\WebstormProjects\AndyTran_MP4\public_html\assets" />
+      <recent name="C:\Users\Adney\WebstormProjects\AndyTran_MP4" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5d46bbc1-8b0c-4e35-9a45-605e3a407ce5" name="Default Changelist" comment="" />
+      <created>1582250915594</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1582250915594</updated>
+      <workItem from="1582250916938" duration="31459000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="734" y="376" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582257161567">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="734" y="376" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1440@0.0.2560.1440" timestamp="1582257161567" />
+    <state x="1010" y="468" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1582273780543">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="1010" y="468" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1440@0.0.2560.1440" timestamp="1582273780543" />
+    <state x="1060" y="476" key="FileChooserDialogImpl" timestamp="1582278167648">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="1060" y="476" key="FileChooserDialogImpl/0.0.2560.1440@0.0.2560.1440" timestamp="1582278167648" />
+    <state x="976" y="318" width="607" height="804" key="find.popup" timestamp="1582269392958">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="976" y="318" width="607" height="804" key="find.popup/0.0.2560.1440@0.0.2560.1440" timestamp="1582269392958" />
+  </component>
+</project>
