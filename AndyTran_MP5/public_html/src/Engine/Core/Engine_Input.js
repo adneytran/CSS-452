@@ -185,7 +185,7 @@ gEngine.Input = (function () {
     var getMousePosX = function () { return mMousePosX; };
     var getMousePosY = function () { return mMousePosY; };
 
-    return {
+    var mPublic = {
         initialize: initialize,
         update: update,
 
@@ -201,4 +201,5 @@ gEngine.Input = (function () {
         getMousePosY: getMousePosY,
         mouseButton: kMouseButton
     };
+    return mPublic;
 }());

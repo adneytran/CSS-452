@@ -91,7 +91,7 @@ gEngine.ResourceMap = (function () {
 
     // Public interface for this object. Anything not in here will
     // not be accessable.
-    return {
+    var mPublic = {
         //<editor-fold desc="asynchronous resource loading support">
         asyncLoadRequested: asyncLoadRequested,
         asyncLoadCompleted: asyncLoadCompleted,
@@ -104,4 +104,5 @@ gEngine.ResourceMap = (function () {
         incAssetRefCount: incAssetRefCount
         //</editor-fold>
     };
+    return mPublic;
 }());

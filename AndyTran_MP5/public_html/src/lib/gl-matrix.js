@@ -4295,7 +4295,7 @@ quat.str = function (a) {
 if(typeof(exports) !== 'undefined') {
     exports.quat = quat;
 }
-
+;
 
 
 

@@ -136,7 +136,7 @@ gEngine.Textures = (function () {
 
     // Public interface for this object. Anything not in here will
     // not be accessable.
-    return {
+    var mPublic = {
         loadTexture: loadTexture,
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,
@@ -144,4 +144,5 @@ gEngine.Textures = (function () {
         getTextureInfo: getTextureInfo,
         getColorArray: getColorArray
     };
+    return mPublic;
 }());

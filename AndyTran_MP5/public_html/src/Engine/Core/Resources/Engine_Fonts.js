@@ -114,9 +114,10 @@ gEngine.Fonts = (function () {
 
     // Public interface for this object. Anything not in here will
     // not be accessable.
-    return {
+    var mPublic = {
         loadFont: loadFont,
         unloadFont: unloadFont,
         getCharInfo: getCharInfo
     };
+    return mPublic;
 }());

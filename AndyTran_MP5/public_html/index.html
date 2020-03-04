@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <title>Example 7.6: Line Support </title>
+        <title>KellanBlakeAndAndyTranMP5</title>
         <link rel ="icon" type ="image/x-icon" href="./assets/favicon.png">
 
         <!-- the following says there are javascript source code contained in 
@@ -57,6 +57,8 @@
 
         <!-- Client game code -->
         <script type="text/javascript" src="src/MyGame/MyGame.js"></script>
+        <script type="text/javascript" src="src/MyGame/Hero.js"></script>
+        <script type="text/javascript" src="src/MyGame/DyePack.js"></script>
         
     </head>
 
@@ -64,7 +66,7 @@
         var myGame = new MyGame();
         gEngine.Core.initializeEngineCore('GLCanvas', myGame);
      ">
-        <canvas id="GLCanvas" width="640" height="480">
+        <canvas id="GLCanvas" width="800" height="800">
             <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
             Your browser does not support the HTML5 canvas.
             <!-- this message will show only if WebGL clearing failed -->

@@ -99,7 +99,7 @@ gEngine.AudioClips = (function () {
 
     // Public interface for this object. Anything not in here will
     // not be accessable.
-    return {
+    var mPublic = {
         initAudioContext: initAudioContext,
         loadAudio: loadAudio,
         unloadAudio: unloadAudio,
@@ -108,4 +108,5 @@ gEngine.AudioClips = (function () {
         stopBackgroundAudio: stopBackgroundAudio,
         isBackgroundAudioPlaying: isBackgroundAudioPlaying
     };
+    return mPublic;
 }());

@@ -79,8 +79,9 @@ gEngine.GameLoop = (function () {
         mIsLoopRunning = false;
     };
 
-    return {
+    var mPublic = {
         start: start,
         stop: stop
     };
+    return mPublic;
 }());

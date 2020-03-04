@@ -37,7 +37,7 @@ gEngine.TextFileLoader = (function () {
             req.setRequestHeader('Content-Type', 'text/xml');
 
             req.onload = function () {
-                var fileContent;
+                var fileContent = null;
                 if (fileType === eTextFileType.eXMLFile) {
                     var parser = new DOMParser();
                     fileContent = parser.parseFromString(req.responseText, "text/xml");
@@ -64,9 +64,10 @@ gEngine.TextFileLoader = (function () {
 
     // Public interface for this object. Anything not in here will
     // not be accessable.
-    return {
+    var mPublic = {
         loadTextFile: loadTextFile,
         unloadTextFile: unloadTextFile,
         eTextFileType: eTextFileType
     };
+    return mPublic;
 }());

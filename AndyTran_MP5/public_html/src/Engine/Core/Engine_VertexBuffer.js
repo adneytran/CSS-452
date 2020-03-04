@@ -94,11 +94,13 @@ gEngine.VertexBuffer = (function () {
         gl.deleteBuffer(mLineVertexBuffer);
     };
 
-    return {
+    var mPublic = {
         initialize: initialize,
         getGLVertexRef: getGLVertexRef,
         getGLTexCoordRef: getGLTexCoordRef,
         getGLLineVertexRef: getGLLineVertexRef,
         cleanUp: cleanUp
     };
+
+    return mPublic;
 }());

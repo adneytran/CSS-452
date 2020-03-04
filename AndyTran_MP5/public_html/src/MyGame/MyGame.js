@@ -11,9 +11,13 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
+
+
 function MyGame() {
+    this.hero = new Hero();
+    this.dyePack = new DyePack();
     // The camera to view the scene
-    this.mCamera = null;
+    
 
     this.mMsg = null;
 
@@ -23,16 +27,17 @@ function MyGame() {
 }
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
-MyGame.prototype.initialize = function () {
-    // Step A: set up the cameras
-    this.mCamera = new Camera(
-        vec2.fromValues(30, 27.5), // position of the camera
-        100,                       // width of camera
-        [0, 0, 640, 480]           // viewport (orgX, orgY, width, height)
+MyGame.mMainCamera = new Camera(
+        vec2.fromValues(30, 30), // position of the camera
+        200,                       // width of camera
+        [0, 0, 800, 600]           // viewport (orgX, orgY, width, height)
     );
-    this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-            // sets the background to gray
 
+MyGame.prototype.initialize = function () {
+    MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
+            // sets the background to gray
+    this.hero.initialize();
+    this.dyePack.initialize();
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
     this.mMsg.getXform().setPosition(-19, -8);
@@ -45,19 +50,22 @@ MyGame.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
-    this.mCamera.setupViewProjection();
-    var i, l;
-    for (i = 0; i < this.mLineSet.length; i++) {
-        l = this.mLineSet[i];
-        l.draw(this.mCamera);
-    }
-    this.mMsg.draw(this.mCamera);   // only draw status in the main camera
+    MyGame.mMainCamera.setupViewProjection();
+    //var i, l;
+    //for (i = 0; i < this.mLineSet.length; i++) {
+    //    l = this.mLineSet[i];
+    //    l.draw(this.mCamera);
+    //}
+    this.hero.draw();
+    //this.dyePack.draw();
+    //this.mMsg.draw(this.mCamera);   // only draw status in the main camera
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
 MyGame.prototype.update = function () {
-    var msg = "Lines: " + this.mLineSet.length + " ";
+    this.hero.update();
+    /*var msg = "Lines: " + this.mLineSet.length + " ";
     var echo = "";
     var x, y;
 
@@ -65,8 +73,8 @@ MyGame.prototype.update = function () {
         var len = this.mLineSet.length;
         if (len > 0) {
             this.mCurrentLine = this.mLineSet[len - 1];
-            x = this.mCamera.mouseWCX();
-            y = this.mCamera.mouseWCY();
+            x = this.mMainCamera.mouseWCX();
+            y = this.mMainCamera.mouseWCY();
             echo += "Selected " + len + " ";
             echo += "[" + x.toPrecision(2) + " " + y.toPrecision(2) + "]";
             this.mCurrentLine.setFirstVertex(x, y);
@@ -74,8 +82,8 @@ MyGame.prototype.update = function () {
     }
 
     if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left)) {
-        x = this.mCamera.mouseWCX();
-        y = this.mCamera.mouseWCY();
+        x = this.mMainCamera.mouseWCX();
+        y = this.mMainCamera.mouseWCY();
         echo += "[" + x.toPrecision(2) + " " + y.toPrecision(2) + "]";
 
         if (this.mCurrentLine === null) { // start a new one
@@ -91,5 +99,5 @@ MyGame.prototype.update = function () {
     }
 
     msg += echo;
-    this.mMsg.setText(msg);
+    this.mMsg.setText(msg);*/
 };

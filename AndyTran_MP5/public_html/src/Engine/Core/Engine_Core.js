@@ -34,6 +34,7 @@ gEngine.Core = (function () {
 
         if (mGL === null) {
             document.write("<br><b>WebGL is not supported!</b>");
+            return;
         }
     };
 
@@ -78,7 +79,7 @@ gEngine.Core = (function () {
     };
     // -- end of public methods
 
-    return {
+    var mPublic = {
         getGL: getGL,
         initializeEngineCore: initializeEngineCore,
         clearCanvas: clearCanvas,
@@ -86,4 +87,6 @@ gEngine.Core = (function () {
         startScene: startScene,
         cleanUp: cleanUp
     };
+
+    return mPublic;
 }());

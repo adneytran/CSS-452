@@ -123,7 +123,7 @@ Camera.prototype.setupViewProjection = function () {
 
     //<editor-fold desc="Step  B: Set up the View-Projection transform operator"> 
     // Step B1: define the view matrix
-    var center;
+    var center = [];
     if (this.mCameraShake !== null) {
         center = this.mCameraShake.getCenter();
     } else {

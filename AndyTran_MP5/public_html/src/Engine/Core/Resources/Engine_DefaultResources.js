@@ -83,7 +83,7 @@ gEngine.DefaultResources = (function () {
 
     // Public interface for this object. Anything not in here will
     // not be accessable.
-    return {
+    var mPublic = {
         initialize: initialize,
         getConstColorShader: getConstColorShader,
         getTextureShader: getTextureShader,
@@ -92,4 +92,5 @@ gEngine.DefaultResources = (function () {
         getDefaultFont: getDefaultFont,
         cleanUp: cleanUp
     };
+    return mPublic;
 }());

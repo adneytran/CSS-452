@@ -13,9 +13,6 @@
 
 //<editor-fold desc="constructor">
 // constructor of SimpleShader object
-/**
- * @return {null}
- */
 function SimpleShader(vertexShaderPath, fragmentShaderPath) {
     // instance variables
     // Convention: all instance variables: mVariables
@@ -108,7 +105,7 @@ SimpleShader.prototype.cleanUp = function () {
 // The id is the id of the script in the html tag.
 SimpleShader.prototype._compileShader = function (filePath, shaderType) {
     var gl = gEngine.Core.getGL();
-    var shaderSource, compiledShader = null;
+    var shaderSource = null, compiledShader = null;
 
     // Step A: Access the shader textfile
     shaderSource = gEngine.ResourceMap.retrieveAsset(filePath);
