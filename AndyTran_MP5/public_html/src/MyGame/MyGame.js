@@ -16,6 +16,7 @@
 function MyGame() {
     this.hero = new Hero();
     this.dyePack = new DyePack();
+    this.patrol = new Patrol();
     // The camera to view the scene
     
 
@@ -38,6 +39,7 @@ MyGame.prototype.initialize = function () {
             // sets the background to gray
     this.hero.initialize();
     this.dyePack.initialize();
+    this.patrol.initialize();
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
     this.mMsg.getXform().setPosition(-19, -8);
@@ -57,6 +59,7 @@ MyGame.prototype.draw = function () {
     //    l.draw(this.mCamera);
     //}
     this.hero.draw();
+    this.patrol.draw();
     //this.dyePack.draw();
     //this.mMsg.draw(this.mCamera);   // only draw status in the main camera
 };
@@ -65,6 +68,7 @@ MyGame.prototype.draw = function () {
 // anything from this function!
 MyGame.prototype.update = function () {
     this.hero.update();
+    this.patrol.update();
     /*var msg = "Lines: " + this.mLineSet.length + " ";
     var echo = "";
     var x, y;

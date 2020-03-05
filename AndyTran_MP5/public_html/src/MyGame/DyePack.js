@@ -42,7 +42,7 @@ DyePack.prototype.update = function () {
         return;
     }
     this.lifespan -= 1 / 60;
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) //Replace this with when dye pack hits patrol.
     {
         this.setShake();
     }
@@ -50,7 +50,7 @@ DyePack.prototype.update = function () {
     {
         this.checkShake();
     }
-    xForm.incXPosBy(this.speed);
+    xForm.incXPosBy(this.speed); //Make sure this line doesnt execute if dye pack is shaking.
     if (xForm.getXPos() >= (MyGame.mMainCamera.getWCWidth() / 2 + MyGame.mMainCamera.getWCCenter()[0]))
     {
         this.dyePackSprite = null;
