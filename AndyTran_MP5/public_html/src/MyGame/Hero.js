@@ -5,7 +5,6 @@
 
 function Hero() {
     this.heroSprite = null;
-    this.dyePack = null;
     this.size = [];
     this.kSpriteSheet = "assets/SpriteSheet.png";
     this.oscillate = false;
@@ -16,13 +15,12 @@ function Hero() {
 }
 
 Hero.prototype.initialize = function () {
-    this.size = [9, 12];
-    
     this.heroSprite = new SpriteRenderable(this.kSpriteSheet);
-    
+
     var texWidth = this.heroSprite.mTexWidth;
     var texHeight = this.heroSprite.mTexHeight;
-    
+
+    this.size = [9, 12];
     this.heroSprite.getXform().setSize(this.size[0], this.size[1]);
     this.heroSprite.getXform().setPosition(30, 30);
     
@@ -34,27 +32,13 @@ Hero.prototype.initialize = function () {
 
 Hero.prototype.draw = function () {
     this.heroSprite.draw(MyGame.mMainCamera);
-    if (this.dyePack !== null && this.dyePack.dyePackSprite !== null)
-    {
-        this.dyePack.draw();
-    }
 };
 
 Hero.prototype.update = function () {
     this.inputOscillate();
-    this.checkInterpolate();
-    this.checkDyePackSpawn();
+    this.interpolateToMousePosition();
+    this.inputDyePackSpawn();
 };
-
-/*Hero.prototype.getNormalizedDirection = function () {
-    var heroX = this.heroSprite.getXform().getXPos();
-    var heroY = this.heroSprite.getXform().getYPos();
-    var mouseX = MyGame.mMainCamera.mouseWCX();
-    var mouseY = MyGame.mMainCamera.mouseWCY();
-    var direction = [mouseX - heroX, mouseY - heroY];
-    var mag = Math.sqrt(Math.pow(direction[0], 2) + Math.pow(direction[1], 2));
-    return [direction[0] / mag, direction[1] / mag];
-};*/
 
 Hero.prototype.setShake = function () {
     var shakeX = 4.5;
@@ -89,7 +73,7 @@ Hero.prototype.inputOscillate = function () {
     }
 };
 
-Hero.prototype.checkInterpolate = function () {
+Hero.prototype.interpolateToMousePosition = function () {
     if (MyGame.mMainCamera.isMouseInViewport())
     {
         var x = MyGame.mMainCamera.mouseWCX();
@@ -103,14 +87,11 @@ Hero.prototype.checkInterpolate = function () {
     }
 };
 
-Hero.prototype.checkDyePackSpawn = function () {
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space))
-    {
-        this.dyePack = new DyePack();
-        this.dyePack.initialize(this.heroSprite.getXform().getXPos(), this.heroSprite.getXform().getYPos());
-    }
-    if (this.dyePack !== null && this.dyePack.dyePackSprite !== null)
-    {
-        this.dyePack.update();
+Hero.prototype.inputDyePackSpawn = function () {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
+        var newDyePack = new DyePack();
+        var heroPosition = this.heroSprite.getXform().getPosition();
+        newDyePack.initialize(heroPosition[0], heroPosition[1]);
+        MyGame.dyePackSet.addToSet(newDyePack);
     }
 };
