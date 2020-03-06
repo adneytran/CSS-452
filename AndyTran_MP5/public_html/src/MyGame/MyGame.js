@@ -24,7 +24,7 @@ function MyGame() {
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.prototype.loadScene = function () {
-    console.log("Load reached");
+    console.log("LoadScene reached");
     gEngine.Textures.loadTexture(this.kSpriteSheet);
 };
 
@@ -32,10 +32,7 @@ MyGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kSpriteSheet);
 };
 
-
 MyGame.dyePackSet = new GameObjectSet();
-
-gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.mMainCamera = new Camera(
         vec2.fromValues(30, 30), // position of the camera
