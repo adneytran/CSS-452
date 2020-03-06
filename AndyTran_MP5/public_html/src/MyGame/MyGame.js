@@ -14,22 +14,21 @@
 
 
 function MyGame() {
-    this.kSpriteSheet = "assets/SpriteSheet.png";
     this.hero = null;
-    this.dyePack = null;
     this.patrol = null;
     this.mMsg = null;
 }
+MyGame.kSpriteSheet = "assets/SpriteSheet.png";
 
-gEngine.Core.inheritPrototype(MyGame, Scene);
+    gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.prototype.loadScene = function () {
     console.log("LoadScene reached");
-    gEngine.Textures.loadTexture(this.kSpriteSheet);
+    gEngine.Textures.loadTexture(MyGame.kSpriteSheet);
 };
 
 MyGame.prototype.unloadScene = function () {
-    gEngine.Textures.unloadTexture(this.kSpriteSheet);
+    gEngine.Textures.unloadTexture(MyGame.kSpriteSheet);
 };
 
 MyGame.dyePackSet = new GameObjectSet();
@@ -40,32 +39,28 @@ MyGame.mMainCamera = new Camera(
         [0, 0, 800, 600]           // viewport (orgX, orgY, width, height)
     );
 
+
 MyGame.prototype.initialize = function () {
     MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
-    this.hero = new Hero(this.kSpriteSheet);
-    this.hero.initialize();
-    this.dyePack.initialize();
-    this.patrol.initialize();
-    this.mMsg = new FontRenderable("Status Message");
-    this.mMsg.setColor([0, 0, 0, 1]);
-    this.mMsg.getXform().setPosition(-19, -8);
-    this.mMsg.setTextHeight(3);
+    this.hero = new Hero(MyGame.kSpriteSheet);
+    this.patrol = new Patrol(MyGame.kSpriteSheet);
 };
 
 MyGame.prototype.draw = function () {
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     MyGame.mMainCamera.setupViewProjection();
-    this.hero.draw();
+    this.hero.draw(MyGame.mMainCamera);
+    MyGame.dyePackSet.draw(MyGame.mMainCamera);
     this.patrol.draw();
-    MyGame.dyePackSet.draw();
 };
 
 MyGame.prototype.update = function () {
     this.hero.update();
-    this.patrol.update();
     MyGame.dyePackSet.update();
+    this.patrol.update();
     checkIfDyePacksAreDestroyed();
+    this.printBB();
 };
 
 function checkIfDyePacksAreDestroyed() {
@@ -76,3 +71,6 @@ function checkIfDyePacksAreDestroyed() {
     }
 }
 
+MyGame.prototype.printBB = function () {
+    console.log(this.hero.getBBox());
+};

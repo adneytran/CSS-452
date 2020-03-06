@@ -5,33 +5,19 @@
 
 function Hero(aSpriteTexture) {
     this.heroSprite = new SpriteRenderable(aSpriteTexture);
-    this.size = [];
+    this.heroSprite.getXform().setPosition(30, 30);
+    this.heroSprite.getXform().setSize(9, 12);
+    var texWidth = this.heroSprite.mTexWidth;
+    var texHeight = this.heroSprite.mTexHeight;
+    this.heroSprite.setElementUVCoordinate(5 / texWidth, 125 / texWidth, 0, 180 / texHeight);
     this.oscillate = false;
-    this.interpolateX = null;
-    this.interpolateY = null;
+    this.interpolateX = new Interpolate(this.heroSprite.getXform().getXPos(), 120, 0.05);
+    this.interpolateY = new Interpolate(this.heroSprite.getXform().getYPos(), 120, 0.05);
     this.shake = null;
+    GameObject.call(this, this.heroSprite);
 }
 
 gEngine.Core.inheritPrototype(Hero, GameObject);
-
-Hero.prototype.initialize = function () {
-
-    var texWidth = this.heroSprite.mTexWidth;
-    var texHeight = this.heroSprite.mTexHeight;
-
-    this.size = [9, 12];
-    this.heroSprite.getXform().setSize(this.size[0], this.size[1]);
-    this.heroSprite.getXform().setPosition(30, 30);
-    
-    this.heroSprite.setElementUVCoordinate(5 / texWidth, 125 / texWidth, 0 / texHeight, 180 / texHeight);
-    
-    this.interpolateX = new Interpolate(this.heroSprite.getXform().getXPos(), 120, 0.05);
-    this.interpolateY = new Interpolate(this.heroSprite.getXform().getYPos(), 120, 0.05);
-};
-
-Hero.prototype.draw = function () {
-    this.heroSprite.draw(MyGame.mMainCamera);
-};
 
 Hero.prototype.update = function () {
     this.inputOscillate();
@@ -80,7 +66,7 @@ Hero.prototype.interpolateToMousePosition = function () {
 
         this.interpolateX.setFinalValue(x);
         this.interpolateX.updateInterpolation();
-        this.heroSprite.getXform().setXPos(this.interpolateX.getValue());
+        this.getXform().setXPos(this.interpolateX.getValue());
         this.interpolateY.setFinalValue(y);
         this.interpolateY.updateInterpolation();
         this.heroSprite.getXform().setYPos(this.interpolateY.getValue());
@@ -89,9 +75,8 @@ Hero.prototype.interpolateToMousePosition = function () {
 
 Hero.prototype.inputDyePackSpawn = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
-        var newDyePack = new DyePack();
         var heroPosition = this.heroSprite.getXform().getPosition();
-        newDyePack.initialize(heroPosition[0], heroPosition[1]);
+        var newDyePack = new DyePack(MyGame.kSpriteSheet, heroPosition);
         MyGame.dyePackSet.addToSet(newDyePack);
     }
 };

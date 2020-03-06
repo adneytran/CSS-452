@@ -3,13 +3,15 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 
-function PatrolWing() {
-    this.wingSprite = null;
-    this.wingType = null;
-    this.interpolationX = null;
-    this.interpolationY = null;
-    this.kSpriteSheet = "assets/SpriteSheet.png";
-    gEngine.Textures.loadTexture(this.kSpriteSheet);
+function PatrolWing(aSpriteTexture, aStartingPosition, aWingType) {
+    this.wingSprite = new SpriteAnimateRenderable(aSpriteTexture);
+    this.wingSprite.getXform().setPosition(aStartingPosition[0], aStartingPosition[1]);
+    this.setupSprite();
+    this.wingType = aWingType === WING_TYPE_BOTTOM ? WING_TYPE_BOTTOM : WING_TYPE_TOP;
+    this.interpolationX = new Interpolate(this.wingSprite.getXform().getXPos(), 120, 0.05);
+    this.interpolationY = new Interpolate(this.wingSprite.getXform().getYPos(), 120, 0.05);
+    this.setupAnimation();
+    GameObject.call(this, this.wingSprite);
 }
 
 gEngine.Core.inheritPrototype(PatrolWing, GameObject);
@@ -20,11 +22,15 @@ const WING_HEIGHT = 164;
 const WING_WIDTH = 204;
 
 
-PatrolWing.prototype.initialize = function (aWingType, aStartingPoint) {
-    this.wingType = aWingType === WING_TYPE_BOTTOM ? WING_TYPE_BOTTOM : WING_TYPE_TOP;
-    this.setupSprite(aStartingPoint);
-    this.setupInterpolation();
-    this.setupAnimation();
+PatrolWing.prototype.setupSprite = function () {
+    this.wingSprite.getXform().setSize(10, 8);
+    var pixelOrigin = this.getPixelOrigin();
+    var texWidth = this.wingSprite.mTexWidth;
+    var texHeight = this.wingSprite.mTexHeight;
+    this.wingSprite.setElementUVCoordinate(0, WING_WIDTH / texWidth,
+        (pixelOrigin - WING_HEIGHT) / texHeight, pixelOrigin / texHeight);
+    var patrolColor = [1, 1, 1, 0];
+    this.wingSprite.setColor(patrolColor);
 };
 
 PatrolWing.prototype.wingInterpolation = function (aHeadTransform) {
@@ -39,24 +45,6 @@ PatrolWing.prototype.wingInterpolation = function (aHeadTransform) {
     this.wingSprite.getXform().setYPos(this.interpolationY.getValue());
 
     this.wingSprite.updateAnimation();
-};
-
-PatrolWing.prototype.setupSprite = function (aStartingPoint) {
-    this.wingSprite = new SpriteAnimateRenderable(this.kSpriteSheet);
-    this.wingSprite.getXform().setPosition(aStartingPoint[0], aStartingPoint[1]);
-    this.wingSprite.getXform().setSize(10, 8);
-    var pixelOrigin = this.getPixelOrigin();
-    var texWidth = this.wingSprite.mTexWidth;
-    var texHeight = this.wingSprite.mTexHeight;
-    this.wingSprite.setElementUVCoordinate(0, WING_WIDTH / texWidth,
-        (pixelOrigin - WING_HEIGHT) / texHeight, pixelOrigin / texHeight);
-    var patrolColor = [1, 1, 1, 0];
-    this.wingSprite.setColor(patrolColor);
-};
-
-PatrolWing.prototype.setupInterpolation = function () {
-    this.interpolationX = new Interpolate(this.wingSprite.getXform().getXPos(), 120, 0.05);
-    this.interpolationY = new Interpolate(this.wingSprite.getXform().getYPos(), 120, 0.05);
 };
 
 PatrolWing.prototype.setupAnimation = function () {

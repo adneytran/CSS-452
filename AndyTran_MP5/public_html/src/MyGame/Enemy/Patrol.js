@@ -4,14 +4,19 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 
-function Patrol() {
-    this.head = new PatrolHead();
-    this.wingOne = new PatrolWing();
-    this.wingTwo = new PatrolWing();
-
+function Patrol(aSpriteTexture) {
+    var cameraPos = MyGame.mMainCamera.getWCCenter();
+    var cameraWidth = MyGame.mMainCamera.getWCWidth();
+    var spawnPoint = this.getRandomSpawnPoint(cameraPos, cameraWidth);
+    this.head = new PatrolHead(aSpriteTexture, spawnPoint);
+    this.wingOne = new PatrolWing(aSpriteTexture, spawnPoint, WING_TYPE_BOTTOM);
+    this.wingTwo = new PatrolWing(aSpriteTexture, spawnPoint, WING_TYPE_TOP);
+    this.setupRandomDirection(cameraPos, cameraWidth);
     this.normalizedDirection = [];
-    this.randomSpeed = 0;
+    this.randomSpeed = Math.random() * (10 - 5) + 5;
     this.oldHeadPos = [];
+    GameObject.call(this, this.head);
+    this.initialize();
 }
 
 gEngine.Core.inheritPrototype(Patrol, GameObject);
@@ -23,20 +28,14 @@ Patrol.prototype.initialize = function () {
 
     var cameraPos = MyGame.mMainCamera.getWCCenter();
     var cameraWidth = MyGame.mMainCamera.getWCWidth();
-    var spawnPoint = this.getRandomSpawnPoint(cameraPos, cameraWidth);
-
-    this.head.initialize(spawnPoint);
-    this.wingOne.initialize(WING_TYPE_BOTTOM, spawnPoint);
-    this.wingTwo.initialize(WING_TYPE_TOP, spawnPoint);
-
     this.setupRandomDirection(cameraPos, cameraWidth);
     this.randomSpeed = Math.random() * (10 - 5) + 5;
 };
 
 Patrol.prototype.draw = function () {
-    this.head.headSprite.draw(MyGame.mMainCamera);
-    this.wingOne.wingSprite.draw(MyGame.mMainCamera);
-    this.wingTwo.wingSprite.draw(MyGame.mMainCamera);
+    this.head.draw(MyGame.mMainCamera);
+    this.wingOne.draw(MyGame.mMainCamera);
+    this.wingTwo.draw(MyGame.mMainCamera);
 };
 
 Patrol.prototype.update = function () {
@@ -54,8 +53,8 @@ Patrol.prototype.setupRandomDirection = function (cameraPos, cameraWidth) {
         - (cameraPos[1] - (cameraWidth * 3 / 4 / 2))) + (cameraPos[1] -
         (cameraWidth * 3 / 4 / 2));
 
-    this.oldHeadPos = [this.head.headSprite.getXform().getPosition()[0],
-        this.head.headSprite.getXform().getPosition()[1]];
+    this.oldHeadPos = [this.head.getXform().getPosition()[0],
+        this.head.getXform().getPosition()[1]];
 
     //Use random position to get the direction that head should move in
     var direction = [randomPosX - this.oldHeadPos[0], randomPosY - this.oldHeadPos[1]];
