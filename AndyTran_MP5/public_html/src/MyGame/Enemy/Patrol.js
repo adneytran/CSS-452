@@ -14,6 +14,8 @@ function Patrol() {
     this.oldHeadPos = [];
 }
 
+gEngine.Core.inheritPrototype(Patrol, GameObject);
+
 const WING_TYPE_BOTTOM = "bottomWing";
 const WING_TYPE_TOP = "topWing";
 
@@ -61,6 +63,12 @@ Patrol.prototype.setupRandomDirection = function (cameraPos, cameraWidth) {
     this.normalizedDirection = [direction[0] / mag, direction[1] / mag];
 };
 
+Patrol.prototype.getRandomSpawnPoint = function (cameraPos, cameraWidth) {
+    var randomSpawnPosX = Math.random() * ((cameraPos[0] + cameraWidth / 2) - cameraPos[0]) + cameraPos[0];
+    var randomSpawnPosY = Math.random() * ((cameraPos[1] + cameraWidth * 3 / 4 / 4) - (cameraPos[1] - cameraWidth * 3 / 4 / 4)) + (cameraPos[1] - cameraWidth * 3 / 4 / 4);
+    return [randomSpawnPosX, randomSpawnPosY];
+};
+
 Patrol.prototype.updateHeadPos = function () {
     this.head.headSprite.getXform().incXPosBy(this.normalizedDirection[0] * this.randomSpeed / 60);
     this.head.headSprite.getXform().incYPosBy(this.normalizedDirection[1] * this.randomSpeed / 60);
@@ -78,11 +86,5 @@ Patrol.prototype.checkTermination = function () {
     }
 };
 
-
-Patrol.prototype.getRandomSpawnPoint = function (cameraPos, cameraWidth) {
-    var randomSpawnPosX = Math.random() * ((cameraPos[0] + cameraWidth / 2) - cameraPos[0]) + cameraPos[0];
-    var randomSpawnPosY = Math.random() * ((cameraPos[1] + cameraWidth * 3 / 4 / 4) - (cameraPos[1] - cameraWidth * 3 / 4 / 4)) + (cameraPos[1] - cameraWidth * 3 / 4 / 4);
-    return [randomSpawnPosX, randomSpawnPosY];
-};
 
 

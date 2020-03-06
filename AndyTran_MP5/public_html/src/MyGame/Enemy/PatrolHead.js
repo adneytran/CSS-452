@@ -9,6 +9,8 @@ function PatrolHead() {
     gEngine.Textures.loadTexture(this.kSpriteSheet);
 }
 
+gEngine.Core.inheritPrototype(PatrolHead, GameObject);
+
 PatrolHead.prototype.initialize = function (aStartingPoint) {
     this.headSprite = new SpriteRenderable(this.kSpriteSheet);
     this.headSprite.getXform().setPosition(aStartingPoint[0], aStartingPoint[1]);

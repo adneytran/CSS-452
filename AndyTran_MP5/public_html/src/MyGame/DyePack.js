@@ -14,6 +14,7 @@ function DyePack() {
     gEngine.Textures.loadTexture(this.kSpriteSheet);
 }
 
+gEngine.Core.inheritPrototype(DyePack, GameObject);
 
 const unitsPerSecond = 120;
 const framesPerSecond = 60;

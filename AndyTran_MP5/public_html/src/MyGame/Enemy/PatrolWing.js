@@ -12,6 +12,8 @@ function PatrolWing() {
     gEngine.Textures.loadTexture(this.kSpriteSheet);
 }
 
+gEngine.Core.inheritPrototype(PatrolWing, GameObject);
+
 const TOP_WING_LOCATION = 512;
 const BOTTOM_WING_LOCATION = 348;
 const WING_HEIGHT = 164;

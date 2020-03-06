@@ -3,19 +3,18 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 
-function Hero() {
-    this.heroSprite = null;
+function Hero(aSpriteTexture) {
+    this.heroSprite = new SpriteRenderable(aSpriteTexture);
     this.size = [];
-    this.kSpriteSheet = "assets/SpriteSheet.png";
     this.oscillate = false;
     this.interpolateX = null;
     this.interpolateY = null;
     this.shake = null;
-    gEngine.Textures.loadTexture(this.kSpriteSheet);
 }
 
+gEngine.Core.inheritPrototype(Hero, GameObject);
+
 Hero.prototype.initialize = function () {
-    this.heroSprite = new SpriteRenderable(this.kSpriteSheet);
 
     var texWidth = this.heroSprite.mTexWidth;
     var texHeight = this.heroSprite.mTexHeight;

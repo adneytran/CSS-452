@@ -14,12 +14,23 @@
 
 
 function MyGame() {
-    this.hero = new Hero();
-    this.dyePack = new DyePack();
-    this.patrol = new Patrol();
+    this.kSpriteSheet = "assets/SpriteSheet.png";
+    this.hero = null;
+    this.dyePack = null;
+    this.patrol = null;
     this.mMsg = null;
-
 }
+
+gEngine.Core.inheritPrototype(MyGame, Scene);
+
+MyGame.prototype.loadScene = function () {
+    gEngine.Textures.loadTexture(this.kSpriteSheet);
+};
+
+MyGame.prototype.unloadScene = function () {
+    gEngine.Textures.unloadTexture(this.kSpriteSheet);
+};
+
 
 MyGame.dyePackSet = new GameObjectSet();
 
@@ -33,7 +44,8 @@ MyGame.mMainCamera = new Camera(
 
 MyGame.prototype.initialize = function () {
     MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-            // sets the background to gray
+
+    this.hero = new Hero(this.kSpriteSheet);
     this.hero.initialize();
     this.dyePack.initialize();
     this.patrol.initialize();
