@@ -3,15 +3,17 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 
-function PatrolHead() {
-    this.headSprite = null;
-    this.kSpriteSheet = "assets/SpriteSheet.png";
-    gEngine.Textures.loadTexture(this.kSpriteSheet);
+function PatrolHead(aSpriteTexture, aStartingPosition) {
+    this.headSprite = new SpriteRenderable(aSpriteTexture);
+    this.headSprite.getXform().setPosition(aStartingPosition[0], aStartingPosition[1]);
+    this.setupSprite();
+    GameObject.call(this, this.headSprite);
 }
 
-PatrolHead.prototype.initialize = function (aStartingPoint) {
-    this.headSprite = new SpriteRenderable(this.kSpriteSheet);
-    this.headSprite.getXform().setPosition(aStartingPoint[0], aStartingPoint[1]);
+gEngine.Core.inheritPrototype(PatrolHead, GameObject);
+
+PatrolHead.prototype.setupSprite = function () {
+
     this.headSprite.getXform().setSize(7.5, 7.5);
     var texWidth = this.headSprite.mTexWidth;
     var texHeight = this.headSprite.mTexHeight;

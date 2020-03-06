@@ -3,26 +3,21 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 
-function DyePack() {
-    this.dyePackSprite = null;
-    this.kSpriteSheet = "assets/SpriteSheet.png";
-    this.oscillate = false;
-    this.speed = 0;
-    this.lifespan = 0;
-    this.position = null;
-    this.shouldBeDestroyed = false;
-    gEngine.Textures.loadTexture(this.kSpriteSheet);
-}
-
-
 const unitsPerSecond = 120;
 const framesPerSecond = 60;
 
-DyePack.prototype.initialize = function (heroPositionX, heroPositionY) { 
-    this.lifespan = 5;
+function DyePack(aSpriteTexture, aStartingPosition) {
+    this.dyePackSprite = new SpriteRenderable(aSpriteTexture);
+    this.oscillate = false;
     this.speed = unitsPerSecond / framesPerSecond;
-    this.setupSpriteTransform(heroPositionX, heroPositionY);
-};
+    this.lifespan = 5;
+    this.position = null;
+    this.shouldBeDestroyed = false;
+    this.setupSpriteTransform(aStartingPosition);
+    GameObject.call(this, this.dyePackSprite);
+}
+
+gEngine.Core.inheritPrototype(DyePack, GameObject);
 
 DyePack.prototype.draw = function () {
     this.dyePackSprite.draw(MyGame.mMainCamera);
@@ -34,15 +29,13 @@ DyePack.prototype.update = function () {
     this.inputDecelerate();
 };
 
-
-DyePack.prototype.setupSpriteTransform = function (heroPositionX, heroPositionY) {
-    this.dyePackSprite = new SpriteRenderable(this.kSpriteSheet);
+DyePack.prototype.setupSpriteTransform = function (aStartingPosition) {
     var texWidth = this.dyePackSprite.mTexWidth;
     var texHeight = this.dyePackSprite.mTexHeight;
     this.dyePackSprite.getXform().setSize(2, 3.25);
     this.dyePackSprite.getXform().setRotationInDegree(90);
-    this.dyePackSprite.getXform().setPosition(heroPositionX, heroPositionY);
-    this.position = [heroPositionX, heroPositionY];
+    this.dyePackSprite.getXform().setPosition(aStartingPosition[0], aStartingPosition[1]);
+    this.position = [aStartingPosition[0], aStartingPosition[1]];
     this.dyePackSprite.setElementUVCoordinate(500 / texWidth, 597 / texWidth, 22 / texHeight, 162 / texHeight);
 };
 
@@ -62,9 +55,7 @@ DyePack.prototype.checkLifespan = function () {
 DyePack.prototype.checkBounds = function(xForm) {
     if ((xForm.getXPos() >= (MyGame.mMainCamera.getWCWidth() / 2 +
         MyGame.mMainCamera.getWCCenter()[0])) || this.speed <= 0) {
-        //this.dyePackSprite = null;
         this.shouldBeDestroyed = true;
-        return;
     }
 };
 

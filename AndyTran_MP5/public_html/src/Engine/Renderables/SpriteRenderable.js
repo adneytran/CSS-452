@@ -18,7 +18,7 @@ function SpriteRenderable(myTexture) {
     this.mTexTop = 1.0;    //   1 is top and 0 is bottom of image
     this.mTexBottom = 0.0; // 
 
-    // 
+    //
     this._setTexInfo();
 }
 gEngine.Core.inheritPrototype(SpriteRenderable, TextureRenderable);
