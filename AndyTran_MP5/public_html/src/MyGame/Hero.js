@@ -78,6 +78,7 @@ Hero.prototype.interpolateToMousePosition = function () {
     {
         var x = MyGame.mMainCamera.mouseWCX();
         var y = MyGame.mMainCamera.mouseWCY();
+
         this.interpolateX.setFinalValue(x);
         this.interpolateX.updateInterpolation();
         this.heroSprite.getXform().setXPos(this.interpolateX.getValue());
