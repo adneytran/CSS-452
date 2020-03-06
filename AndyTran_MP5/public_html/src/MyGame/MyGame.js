@@ -24,6 +24,7 @@ function MyGame() {
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.prototype.loadScene = function () {
+    console.log("Load reached");
     gEngine.Textures.loadTexture(this.kSpriteSheet);
 };
 
