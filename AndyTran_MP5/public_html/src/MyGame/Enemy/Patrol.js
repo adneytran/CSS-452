@@ -16,11 +16,15 @@ function Patrol(aSpriteTexture) {
     this.normalizedDirection = [];
     this.randomSpeed = Math.random() * (10 - 5) + 5;
     this.oldHeadPos = [];
-    //GameObject.call(this, this.head);
+    GameObject.call(this, this.head);
     this.initialize();
+    this.canReflectLeft = true;
+    this.canReflectRight = true;
+    this.canReflectTop = true;
+    this.canReflectBottom = true;
 }
 
-//gEngine.Core.inheritPrototype(Patrol, GameObject);
+gEngine.Core.inheritPrototype(Patrol, GameObject);
 
 const WING_TYPE_BOTTOM = "bottomWing";
 const WING_TYPE_TOP = "topWing";
