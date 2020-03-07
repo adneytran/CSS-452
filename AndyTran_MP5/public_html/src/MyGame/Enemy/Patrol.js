@@ -38,10 +38,10 @@ Patrol.prototype.initialize = function () {
     this.setupRandomDirection(cameraPos, cameraWidth);
 };
 
-Patrol.prototype.draw = function () {
-    this.head.draw(MyGame.mMainCamera);
-    this.bottomWing.draw(MyGame.mMainCamera);
-    this.topWing.draw(MyGame.mMainCamera);
+Patrol.prototype.draw = function (aCamera) {
+    this.head.draw(aCamera);
+    this.bottomWing.draw(aCamera);
+    this.topWing.draw(aCamera);
 };
 
 Patrol.prototype.update = function () {

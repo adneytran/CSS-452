@@ -20,10 +20,6 @@ function DyePack(aSpriteTexture, aStartingPosition) {
 
 gEngine.Core.inheritPrototype(DyePack, GameObject);
 
-DyePack.prototype.draw = function () {
-    this.dyePackSprite.draw(MyGame.mMainCamera);
-};
-
 DyePack.prototype.update = function () {
     this.checkLifespan();
     this.inputDecelerate();

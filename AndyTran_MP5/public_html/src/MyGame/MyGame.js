@@ -19,6 +19,10 @@ function MyGame() {
     this.autoSpawn = true;
     this.spawnTimer = 0;
     this.heroZoomCamera = null;
+    this.dyePackZoomCamera1 = null;
+    this.dyePackZoomCamera2 = null;
+    this.dyePackZoomCamera3 = null;
+
 }
 
 MyGame.kSpriteSheet = "assets/SpriteSheet.png";
@@ -40,12 +44,12 @@ MyGame.patrolSet = new GameObjectSet();
 MyGame.mMainCamera = new Camera(
     vec2.fromValues(30, 30), // position of the camera
     200,                       // width of camera
-    [0, 0, 800, 600]           // viewport (orgX, orgY, width, height)
+    [0, 0, 800, 600],           // viewport (orgX, orgY, width, height)
 );
 
+MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
 MyGame.prototype.initialize = function () {
-    MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
     this.hero = new Hero(MyGame.kSpriteSheet);
     var firstPatrol = new Patrol(MyGame.kSpriteSheet);
     MyGame.patrolSet.addToSet(firstPatrol);
@@ -56,18 +60,31 @@ MyGame.prototype.initialize = function () {
     this.mMsg.getXform().setPosition(30 - 99, 30 - 72);
     this.mMsg.setTextHeight(3);
 
-    this.heroZoomCamera = new ZoomCam(new Camera (
+    this.heroZoomCamera = new Camera(
         vec2.fromValues(30, 30), // position of the camera
         20,                       // width of camera
-        [0, 600, 200, 200])       // viewport (orgX, orgY, width, height)))
-    )
-};
+        [0, 600, 200, 200],       // viewport (orgX, orgY, width, height)
+        2);
+    this.heroZoomCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
+    this.heroZoomCamera.configInterpolation(0.7, 10);
 
-MyGame.prototype.draw = function () {
-    gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-    this.drawCamera(MyGame.mMainCamera);
-    this.mMsg.draw(MyGame.mMainCamera);
-    this.drawCamera(this.heroZoomCamera.camera);
+    this.dyePackZoomCamera1 = new Camera(
+        vec2.fromValues(30, 30), // position of the camera
+        20,                       // width of camera
+        [200, 600, 200, 200],       // viewport (orgX, orgY, width, height)
+        2);
+
+    this.dyePackZoomCamera2 = new Camera(
+        vec2.fromValues(30, 30), // position of the camera
+        20,                       // width of camera
+        [400, 600, 200, 200],       // viewport (orgX, orgY, width, height)
+        2);
+
+    this.dyePackZoomCamera3 = new Camera(
+        vec2.fromValues(30, 30), // position of the camera
+        20,                       // width of camera
+        [600, 600, 200, 200],       // viewport (orgX, orgY, width, height)
+        2);
 };
 
 MyGame.prototype.drawCamera = function (aCamera) {
@@ -78,22 +95,36 @@ MyGame.prototype.drawCamera = function (aCamera) {
     this.drawPatrolBoundingBoxes(aCamera);
 };
 
+MyGame.prototype.draw = function () {
+    gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
+    this.drawCamera(MyGame.mMainCamera);
+    this.mMsg.draw(MyGame.mMainCamera);
+    if (this.hero.oscillate) {
+        this.drawCamera(this.heroZoomCamera);
+    }
+
+};
+
+
 MyGame.prototype.update = function () {
+    MyGame.mMainCamera.update();
+    this.heroZoomCamera.update();
+
     this.hero.update();
     MyGame.dyePackSet.update();
     MyGame.patrolSet.update();
+
+    this.heroZoomCamera.panTo(this.hero.getXform().getXPos(), this.hero.getXform().getYPos());
+
     checkIfDyePacksAreDestroyed();
-    this.dyePackEntersPatrolBound();
     checkIfPatrolsAreDestroyed();
+    this.dyePackEntersPatrolBound();
     this.checkAutoSpawnInput();
     this.checkPatrolSpawnInput();
-    this.checkForAutoSpawn();
     this.inputShouldShowBoundingBoxes();
+    this.checkForAutoSpawn();
     this.heroEntersPatrolBoundingBox();
     this.updateMessage();
-
-    MyGame.mMainCamera.update();
-    this.heroZoomCamera.update(this.hero);
 };
 
 function checkIfDyePacksAreDestroyed() {
