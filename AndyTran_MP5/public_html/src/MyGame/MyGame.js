@@ -17,6 +17,11 @@ function MyGame() {
     this.shouldShowBB = false;
 
     this.mMsg = null;
+    
+    this.autoSpawn = true;
+    this.spawnTimer = 0;
+    
+    this.mMsg = null;
 }
 
 MyGame.kSpriteSheet = "assets/SpriteSheet.png";
@@ -45,11 +50,14 @@ MyGame.mMainCamera = new Camera(
 MyGame.prototype.initialize = function () {
     MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
     this.hero = new Hero(MyGame.kSpriteSheet);
-    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
-    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
-    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
-    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
-    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
+    var firstPatrol = new Patrol(MyGame.kSpriteSheet);
+    MyGame.patrolSet.addToSet(firstPatrol);
+    this.spawnTimer = Math.random() * (3 - 2) + 2;
+    
+    this.mMsg = new FontRenderable("Status Message");
+    this.mMsg.setColor([0, 0, 0, 1]);
+    this.mMsg.getXform().setPosition(30 - 99, 30 - 72);
+    this.mMsg.setTextHeight(3);
 };
 
 MyGame.prototype.draw = function () {
@@ -59,6 +67,7 @@ MyGame.prototype.draw = function () {
     MyGame.dyePackSet.draw(MyGame.mMainCamera);
     MyGame.patrolSet.draw(MyGame.mMainCamera);
     this.drawPatrolBoundingBoxes();
+    this.mMsg.draw(MyGame.mMainCamera);
 };
 
 MyGame.prototype.update = function () {
@@ -66,8 +75,13 @@ MyGame.prototype.update = function () {
     MyGame.dyePackSet.update();
     MyGame.patrolSet.update();
     checkIfDyePacksAreDestroyed();
+    checkIfPatrolsAreDestroyed();
+    this.checkAutoSpawnInput();
+    this.checkForAutoSpawn();
+    this.checkPatrolSpawnInput();
     this.inputShouldShowBoundingBoxes();
     this.TEST_heroEntersPatrolBoundingBox();
+    this.updateMessage();
 };
 
 function checkIfDyePacksAreDestroyed() {
@@ -77,6 +91,30 @@ function checkIfDyePacksAreDestroyed() {
         }
     }
 }
+
+function checkIfPatrolsAreDestroyed() {
+    for (var i = 0; i < MyGame.patrolSet.size(); i++) {
+        if (MyGame.patrolSet.mSet[i].shouldBeDestroyed) {
+            MyGame.patrolSet.mSet.splice(i, 1);
+        }
+    }
+}
+
+MyGame.prototype.checkForAutoSpawn = function () {
+    if (this.autoSpawn === true)
+    {
+        if (this.spawnTimer <= 0)
+        {
+            var newPatrol = new Patrol(MyGame.kSpriteSheet);
+            MyGame.patrolSet.addToSet(newPatrol);
+            this.spawnTimer = Math.random() * (3 - 2) + 2;
+        }
+        else
+        {
+            this.spawnTimer -= 1 / 60;
+        }
+    }
+};
 
 MyGame.prototype.drawPatrolBoundingBoxes = function () {
     if (this.shouldShowBB) {
@@ -97,18 +135,48 @@ MyGame.prototype.inputShouldShowBoundingBoxes = function () {
 };
 
 MyGame.prototype.TEST_heroEntersPatrolBoundingBox = function () {
-    // var heroBox = this.hero.getBBox();
-    // var h = [];
-    // if (this.hero.pixelTouches(this.patrol.head, h)) {
-    //     console.log("head hit");
-    // }
-    // if (this.hero.pixelTouches(this.patrol.bottomWing, h)) {
-    //     console.log("bottom wing hit");
-    // }
-    // if (this.hero.pixelTouches(this.patrol.topWing, h)) {
-    //     console.log("top wing hit");
-    // }
-    // if (heroBox.intersectsBound(this.patrol.boundingBox)) {
-    //     console.log("hit outer bound");
-    // }
+    var heroBox = this.hero.getBBox();
+    var h = [];
+    /*if (this.hero.pixelTouches(this.patrol.head, h)) {
+        console.log("head hit");
+    }
+    if (this.hero.pixelTouches(this.patrol.bottomWing, h)) {
+        console.log("bottom wing hit");
+    }
+    if (this.hero.pixelTouches(this.patrol.topWing, h)) {
+        console.log("top wing hit");
+    }
+    if (heroBox.intersectsBound(this.patrol.boundingBox)) {
+        console.log("hit outer bound");
+    }*/
+};
+
+MyGame.prototype.checkPatrolSpawnInput = function () {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C))
+    {
+        var newPatrol = new Patrol(MyGame.kSpriteSheet);
+        MyGame.patrolSet.addToSet(newPatrol);
+    }
+};
+
+MyGame.prototype.checkAutoSpawnInput = function () {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
+    {
+        console.log(this.autoSpawn);
+        if (this.autoSpawn === true)
+        {
+            this.autoSpawn = false;
+        }
+        else
+        {
+            this.autoSpawn = true;
+            this.spawnTimer = Math.random() * (3 - 2) + 2;
+        }
+    }
+};
+
+MyGame.prototype.updateMessage = function () {
+    var msg = "Status: DyePacks(" + MyGame.dyePackSet.size() + ") Patrols(" +
+            MyGame.patrolSet.size() + ") AutoSpawn(" + this.autoSpawn + ")";
+    this.mMsg.setText(msg);
 };

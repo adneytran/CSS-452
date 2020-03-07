@@ -13,6 +13,7 @@ function DyePack(aSpriteTexture, aStartingPosition) {
     this.lifespan = 5;
     this.position = null;
     this.shouldBeDestroyed = false;
+    this.oscillatePos = [];
     this.setupSpriteTransform(aStartingPosition);
     GameObject.call(this, this.dyePackSprite);
 }
@@ -26,17 +27,15 @@ DyePack.prototype.draw = function () {
 DyePack.prototype.update = function () {
     this.checkLifespan();
     this.inputDecelerate();
-    this.inputCheckShake();
+    this.checkCollision();
 };
 
 DyePack.prototype.setupSpriteTransform = function (aStartingPosition) {
-    var texWidth = this.dyePackSprite.mTexWidth;
-    var texHeight = this.dyePackSprite.mTexHeight;
     this.dyePackSprite.getXform().setSize(2, 3.25);
     this.dyePackSprite.getXform().setRotationInDegree(90);
     this.dyePackSprite.getXform().setPosition(aStartingPosition[0], aStartingPosition[1]);
     this.position = [aStartingPosition[0], aStartingPosition[1]];
-    this.dyePackSprite.setElementUVCoordinate(500 / texWidth, 597 / texWidth, 22 / texHeight, 162 / texHeight);
+    this.dyePackSprite.setElementPixelPositions(500, 597, 22, 162);
 };
 
 DyePack.prototype.checkLifespan = function () {
@@ -47,7 +46,10 @@ DyePack.prototype.checkLifespan = function () {
         return;
     }
     this.lifespan -= 1 / framesPerSecond;
-    xForm.incXPosBy(this.speed); //Make sure this line doesnt execute if dye pack is shaking.
+    if (this.oscillate === false)
+    {
+        xForm.incXPosBy(this.speed);
+    }
     this.checkBounds.call(this, xForm);
 };
 
@@ -58,16 +60,14 @@ DyePack.prototype.checkBounds = function(xForm) {
     }
 };
 
-DyePack.prototype.hit = function() {
-    
-};
-
 DyePack.prototype.setShake = function () {
     var shakeX = 4;
     var shakeY = 0.2;
     var frequency = 20;
     var duration = 300;
     this.oscillate = true;
+    this.oscillatePos = [this.dyePackSprite.getXform().getXPos(), 
+        this.dyePackSprite.getXform().getYPos()];
     this.shake = new ShakePosition(shakeX, shakeY, frequency, duration);
 };
 
@@ -79,7 +79,8 @@ DyePack.prototype.checkShake = function () {
     else
     {
         var shakeSize = this.shake.getShakeResults();
-        this.dyePackSprite.getXform().setPosition(this.position[0] + shakeSize[0], this.position[1] + shakeSize[1]);
+        this.dyePackSprite.getXform().setPosition(this.oscillatePos[0] + 
+                shakeSize[0], this.oscillatePos[1] + shakeSize[1]);
     }
 };
 
@@ -90,10 +91,24 @@ DyePack.prototype.inputDecelerate = function () {
     }
 };
 
-DyePack.prototype.inputCheckShake = function () {
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S)) //Replace this with when dye pack hits patrol.
+DyePack.prototype.checkCollision = function () {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S))
     {
         this.setShake();
+    }
+    if (this.oscillate === false)
+    {
+        for (var i = 0; i < MyGame.patrolSet.size(); i++)
+        {
+            var wcTouchPos = [];
+            this.checkPixelTouch(MyGame.patrolSet.getObjectAt(i).head, wcTouchPos);
+            this.checkPixelTouch(MyGame.patrolSet.getObjectAt(i).topWing, wcTouchPos);
+            this.checkPixelTouch(MyGame.patrolSet.getObjectAt(i).bottomWing, wcTouchPos);
+            if (this.oscillate === true)
+            {
+                break;
+            }
+        } 
     }
     if (this.oscillate === true)
     {
@@ -103,4 +118,13 @@ DyePack.prototype.inputCheckShake = function () {
 
 DyePack.prototype.shouldDestroyObject = function() {
     return this.shouldBeDestroyed;
+};
+
+DyePack.prototype.checkPixelTouch = function (patrolPart, wcTouchPos)
+{
+    if (this.pixelTouches(patrolPart, wcTouchPos))
+    {
+        this.setShake();
+        patrolPart.hit();
+    }
 };

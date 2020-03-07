@@ -26,3 +26,6 @@ PatrolHead.prototype.update = function () {
     this.headBoundingBox = this.getBBox();
 };
 
+PatrolHead.prototype.hit = function () {
+    this.headSprite.getXform().incXPosBy(5);
+};

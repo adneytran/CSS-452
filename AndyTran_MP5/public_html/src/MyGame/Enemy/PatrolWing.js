@@ -55,7 +55,11 @@ PatrolWing.prototype.setupAnimation = function () {
 
 };
 
-PatrolWing.prototype.getPixelOrigin = function() {
+PatrolWing.prototype.getPixelOrigin = function () {
     return this.wingType === WING_TYPE_BOTTOM ? BOTTOM_WING_LOCATION : TOP_WING_LOCATION;
+};
+
+PatrolWing.prototype.hit = function () {
+    this.wingSprite.setColor([1, 1, 1, this.wingSprite.getColor()[3] + 0.2]);
 };
 
