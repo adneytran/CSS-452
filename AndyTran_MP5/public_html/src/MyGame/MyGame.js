@@ -16,7 +16,6 @@ function MyGame() {
     this.hero = null;
     this.shouldShowBB = false;
 
-    this.isCollided = false;
     this.mMsg = null;
     
     this.autoSpawn = true;
@@ -50,7 +49,6 @@ MyGame.mMainCamera = new Camera(
 
 MyGame.prototype.initialize = function () {
     MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-
     this.hero = new Hero(MyGame.kSpriteSheet);
     var firstPatrol = new Patrol(MyGame.kSpriteSheet);
     MyGame.patrolSet.addToSet(firstPatrol);
@@ -120,10 +118,13 @@ MyGame.prototype.checkForAutoSpawn = function () {
 
 MyGame.prototype.drawPatrolBoundingBoxes = function () {
     if (this.shouldShowBB) {
-        this.patrol.boundingBox.drawBoundingBox(MyGame.mMainCamera);
-        this.patrol.head.headBoundingBox.drawBoundingBox(MyGame.mMainCamera);
-        this.patrol.bottomWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
-        this.patrol.topWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+        for (var i = 0; i < MyGame.patrolSet.size(); i++) {
+            var patrol = MyGame.patrolSet.getObjectAt(i);
+            patrol.boundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.head.headBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.bottomWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.topWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+        }
     }
 };
 

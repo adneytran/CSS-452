@@ -16,9 +16,15 @@ function Patrol(aSpriteTexture) {
     this.normalizedDirection = [];
     this.randomSpeed = Math.random() * (10 - 5) + 5;
     this.oldHeadPos = [];
+
     this.shouldBeDestroyed = false;
-    //GameObject.call(this, this.head);
+    GameObject.call(this, this.head);
+
     this.initialize();
+    this.canReflectLeft = true;
+    this.canReflectRight = true;
+    this.canReflectTop = true;
+    this.canReflectBottom = true;
 }
 
 gEngine.Core.inheritPrototype(Patrol, GameObject);
@@ -30,7 +36,6 @@ Patrol.prototype.initialize = function () {
     var cameraPos = MyGame.mMainCamera.getWCCenter();
     var cameraWidth = MyGame.mMainCamera.getWCWidth();
     this.setupRandomDirection(cameraPos, cameraWidth);
-    this.randomSpeed = Math.random() * (10 - 5) + 5;
 };
 
 Patrol.prototype.draw = function () {
@@ -46,6 +51,7 @@ Patrol.prototype.update = function () {
     this.bottomWing.update();
     this.topWing.update();
     this.updateHeadPos();
+    this.checkWorldBoundCollision();
     this.checkTermination();
     this.boundingBox = this.updateBoundingBox();
 };
@@ -104,8 +110,8 @@ Patrol.prototype.updateBoundingBox = function () {
     var boxLR = bottomWingLRCorner;
     var boxHeight = (topWingURCorner[1] - bottomWingLRCorner[1]) * 1.5;
     var boxWidth = boxLR[0] - boxLL[0];
-    var centerBoxPosition = [boxLL[0] + boxWidth / 2, boxLL[1] + boxHeight / 2];
-    return new BoundingBox(centerBoxPosition, boxWidth, boxHeight);
+    var centerPosition = [boxLL[0] + boxWidth / 2, boxLL[1] + boxHeight / 2];
+    return new BoundingBox(centerPosition, boxWidth, boxHeight);
 };
 
 Patrol.prototype.checkHitInput = function () {
@@ -114,6 +120,4 @@ Patrol.prototype.checkHitInput = function () {
         this.head.hit();
     }
 };
-
-
 
