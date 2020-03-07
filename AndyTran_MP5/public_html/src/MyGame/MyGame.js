@@ -65,7 +65,6 @@ MyGame.prototype.update = function () {
     this.patrol.update();
     checkIfDyePacksAreDestroyed();
     this.inputShouldShowBoundingBoxes();
-    this.inputCheckShake();
     this.TEST_heroEntersPatrolBoundingBox();
 };
 
@@ -93,18 +92,18 @@ MyGame.prototype.inputShouldShowBoundingBoxes = function () {
 };
 
 MyGame.prototype.TEST_heroEntersPatrolBoundingBox = function () {
-    var heroBox = this.hero.getBBox();
-    var h = [];
-    if (this.hero.pixelTouches(this.patrol.head, h)) {
-        console.log("head hit");
-    }
-    if (this.hero.pixelTouches(this.patrol.bottomWing, h)) {
-        console.log("bottom wing hit");
-    }
-    if (this.hero.pixelTouches(this.patrol.topWing, h)) {
-        console.log("top wing hit");
-    }
-    if (heroBox.intersectsBound(this.patrol.boundingBox)) {
-        console.log("hit outer bound");
-    }
+    // var heroBox = this.hero.getBBox();
+    // var h = [];
+    // if (this.hero.pixelTouches(this.patrol.head, h)) {
+    //     console.log("head hit");
+    // }
+    // if (this.hero.pixelTouches(this.patrol.bottomWing, h)) {
+    //     console.log("bottom wing hit");
+    // }
+    // if (this.hero.pixelTouches(this.patrol.topWing, h)) {
+    //     console.log("top wing hit");
+    // }
+    // if (heroBox.intersectsBound(this.patrol.boundingBox)) {
+    //     console.log("hit outer bound");
+    // }
 };
