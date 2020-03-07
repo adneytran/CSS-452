@@ -15,13 +15,10 @@
 function MyGame() {
     this.hero = null;
     this.shouldShowBB = false;
-
     this.mMsg = null;
-
     this.autoSpawn = true;
     this.spawnTimer = 0;
-
-    this.mMsg = null;
+    this.heroZoomCamera = null;
 }
 
 MyGame.kSpriteSheet = "assets/SpriteSheet.png";
@@ -58,16 +55,27 @@ MyGame.prototype.initialize = function () {
     this.mMsg.setColor([0, 0, 0, 1]);
     this.mMsg.getXform().setPosition(30 - 99, 30 - 72);
     this.mMsg.setTextHeight(3);
+
+    this.heroZoomCamera = new ZoomCam(new Camera (
+        vec2.fromValues(30, 30), // position of the camera
+        20,                       // width of camera
+        [0, 600, 200, 200])       // viewport (orgX, orgY, width, height)))
+    )
 };
 
 MyGame.prototype.draw = function () {
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-    MyGame.mMainCamera.setupViewProjection();
-    this.hero.draw(MyGame.mMainCamera);
-    MyGame.dyePackSet.draw(MyGame.mMainCamera);
-    MyGame.patrolSet.draw(MyGame.mMainCamera);
-    this.drawPatrolBoundingBoxes();
+    this.drawCamera(MyGame.mMainCamera);
     this.mMsg.draw(MyGame.mMainCamera);
+    this.drawCamera(this.heroZoomCamera.camera);
+};
+
+MyGame.prototype.drawCamera = function (aCamera) {
+    aCamera.setupViewProjection();
+    this.hero.draw(aCamera);
+    MyGame.dyePackSet.draw(aCamera);
+    MyGame.patrolSet.draw(aCamera);
+    this.drawPatrolBoundingBoxes(aCamera);
 };
 
 MyGame.prototype.update = function () {
@@ -78,11 +86,14 @@ MyGame.prototype.update = function () {
     this.dyePackEntersPatrolBound();
     checkIfPatrolsAreDestroyed();
     this.checkAutoSpawnInput();
-    this.checkForAutoSpawn();
     this.checkPatrolSpawnInput();
+    this.checkForAutoSpawn();
     this.inputShouldShowBoundingBoxes();
     this.heroEntersPatrolBoundingBox();
     this.updateMessage();
+
+    MyGame.mMainCamera.update();
+    this.heroZoomCamera.update(this.hero);
 };
 
 function checkIfDyePacksAreDestroyed() {
@@ -113,14 +124,14 @@ MyGame.prototype.checkForAutoSpawn = function () {
     }
 };
 
-MyGame.prototype.drawPatrolBoundingBoxes = function () {
+MyGame.prototype.drawPatrolBoundingBoxes = function (aCamera) {
     if (this.shouldShowBB) {
         for (var i = 0; i < MyGame.patrolSet.size(); i++) {
             var patrol = MyGame.patrolSet.getObjectAt(i);
-            patrol.boundingBox.drawBoundingBox(MyGame.mMainCamera);
-            patrol.head.headBoundingBox.drawBoundingBox(MyGame.mMainCamera);
-            patrol.bottomWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
-            patrol.topWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.boundingBox.drawBoundingBox(aCamera);
+            patrol.head.headBoundingBox.drawBoundingBox(aCamera);
+            patrol.bottomWing.wingBoundingBox.drawBoundingBox(aCamera);
+            patrol.topWing.wingBoundingBox.drawBoundingBox(aCamera);
         }
     }
 };
