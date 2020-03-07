@@ -53,6 +53,7 @@ Patrol.prototype.update = function () {
     this.updateHeadPos();
     this.checkWorldBoundCollision();
     this.checkTermination();
+    this.checkHitInput();
     this.boundingBox = this.updateBoundingBox();
 };
 

@@ -17,10 +17,10 @@ function MyGame() {
     this.shouldShowBB = false;
 
     this.mMsg = null;
-    
+
     this.autoSpawn = true;
     this.spawnTimer = 0;
-    
+
     this.mMsg = null;
 }
 
@@ -53,7 +53,7 @@ MyGame.prototype.initialize = function () {
     var firstPatrol = new Patrol(MyGame.kSpriteSheet);
     MyGame.patrolSet.addToSet(firstPatrol);
     this.spawnTimer = Math.random() * (3 - 2) + 2;
-    
+
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
     this.mMsg.getXform().setPosition(30 - 99, 30 - 72);
@@ -75,12 +75,13 @@ MyGame.prototype.update = function () {
     MyGame.dyePackSet.update();
     MyGame.patrolSet.update();
     checkIfDyePacksAreDestroyed();
+    this.dyePackEntersPatrolBound();
     checkIfPatrolsAreDestroyed();
     this.checkAutoSpawnInput();
     this.checkForAutoSpawn();
     this.checkPatrolSpawnInput();
     this.inputShouldShowBoundingBoxes();
-    this.TEST_heroEntersPatrolBoundingBox();
+    this.heroEntersPatrolBoundingBox();
     this.updateMessage();
 };
 
@@ -101,16 +102,12 @@ function checkIfPatrolsAreDestroyed() {
 }
 
 MyGame.prototype.checkForAutoSpawn = function () {
-    if (this.autoSpawn === true)
-    {
-        if (this.spawnTimer <= 0)
-        {
+    if (this.autoSpawn === true) {
+        if (this.spawnTimer <= 0) {
             var newPatrol = new Patrol(MyGame.kSpriteSheet);
             MyGame.patrolSet.addToSet(newPatrol);
             this.spawnTimer = Math.random() * (3 - 2) + 2;
-        }
-        else
-        {
+        } else {
             this.spawnTimer -= 1 / 60;
         }
     }
@@ -134,41 +131,43 @@ MyGame.prototype.inputShouldShowBoundingBoxes = function () {
     }
 };
 
-MyGame.prototype.TEST_heroEntersPatrolBoundingBox = function () {
+MyGame.prototype.heroEntersPatrolBoundingBox = function () {
     var heroBox = this.hero.getBBox();
-    var h = [];
-    /*if (this.hero.pixelTouches(this.patrol.head, h)) {
-        console.log("head hit");
+
+    for (var i = 0; i < MyGame.patrolSet.size(); i++) {
+        var headBox = MyGame.patrolSet.getObjectAt(i).head.headBoundingBox;
+        if (heroBox.intersectsBound(headBox)) {
+            this.hero.setShake();
+        }
     }
-    if (this.hero.pixelTouches(this.patrol.bottomWing, h)) {
-        console.log("bottom wing hit");
-    }
-    if (this.hero.pixelTouches(this.patrol.topWing, h)) {
-        console.log("top wing hit");
-    }
-    if (heroBox.intersectsBound(this.patrol.boundingBox)) {
-        console.log("hit outer bound");
-    }*/
+
 };
 
+MyGame.prototype.dyePackEntersPatrolBound = function () {
+    for (var i = 0; i < MyGame.dyePackSet.size(); i++) {
+        for (var j = 0; j < MyGame.patrolSet.size(); j++) {
+            var dyePackBox = MyGame.dyePackSet.getObjectAt(i).getBBox();
+            var patrolBox = MyGame.patrolSet.getObjectAt(j).boundingBox;
+            if (dyePackBox.intersectsBound(patrolBox)) {
+                MyGame.dyePackSet.getObjectAt(i).decelerate();
+            }
+        }
+    }
+}
+
 MyGame.prototype.checkPatrolSpawnInput = function () {
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C))
-    {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C)) {
         var newPatrol = new Patrol(MyGame.kSpriteSheet);
         MyGame.patrolSet.addToSet(newPatrol);
     }
 };
 
 MyGame.prototype.checkAutoSpawnInput = function () {
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
-    {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.P)) {
         console.log(this.autoSpawn);
-        if (this.autoSpawn === true)
-        {
+        if (this.autoSpawn === true) {
             this.autoSpawn = false;
-        }
-        else
-        {
+        } else {
             this.autoSpawn = true;
             this.spawnTimer = Math.random() * (3 - 2) + 2;
         }
@@ -177,6 +176,6 @@ MyGame.prototype.checkAutoSpawnInput = function () {
 
 MyGame.prototype.updateMessage = function () {
     var msg = "Status: DyePacks(" + MyGame.dyePackSet.size() + ") Patrols(" +
-            MyGame.patrolSet.size() + ") AutoSpawn(" + this.autoSpawn + ")";
+        MyGame.patrolSet.size() + ") AutoSpawn(" + this.autoSpawn + ")";
     this.mMsg.setText(msg);
 };

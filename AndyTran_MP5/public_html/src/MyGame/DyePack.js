@@ -84,10 +84,14 @@ DyePack.prototype.checkShake = function () {
     }
 };
 
+DyePack.prototype.decelerate = function() {
+    this.speed -= 0.1;
+}
+
 DyePack.prototype.inputDecelerate = function () {
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
     {
-        this.speed -= 0.1;
+        this.decelerate();
     }
 };
 

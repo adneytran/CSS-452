@@ -26,6 +26,9 @@ Hero.prototype.update = function () {
 };
 
 Hero.prototype.setShake = function () {
+    if (this.oscillate) {
+        return;
+    }
     var shakeX = 4.5;
     var shakeY = 6;
     var frequency = 4;
