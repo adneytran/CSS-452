@@ -25,8 +25,8 @@ DyePack.prototype.draw = function () {
 
 DyePack.prototype.update = function () {
     this.checkLifespan();
-    this.inputCheckShake();
     this.inputDecelerate();
+    this.inputCheckShake();
 };
 
 DyePack.prototype.setupSpriteTransform = function (aStartingPosition) {
@@ -87,6 +87,17 @@ DyePack.prototype.inputDecelerate = function () {
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
     {
         this.speed -= 0.1;
+    }
+};
+
+DyePack.prototype.inputCheckShake = function () {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S)) //Replace this with when dye pack hits patrol.
+    {
+        this.setShake();
+    }
+    if (this.oscillate === true)
+    {
+        this.checkShake();
     }
 };
 

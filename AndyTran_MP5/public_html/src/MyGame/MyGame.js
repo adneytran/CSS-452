@@ -92,16 +92,6 @@ MyGame.prototype.inputShouldShowBoundingBoxes = function () {
     }
 };
 
-MyGame.prototype.inputCheckShake = function () {
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S)) //Replace this with when dye pack hits patrol.
-    {
-        for (var i = 0; i < MyGame.dyePackSet; i++) {
-            //MyGame.dyePackSet[i].hit()
-        }
-
-};
-
-
 MyGame.prototype.TEST_heroEntersPatrolBoundingBox = function () {
     var heroBox = this.hero.getBBox();
     var h = [];
