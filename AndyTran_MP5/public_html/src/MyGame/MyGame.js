@@ -16,6 +16,7 @@
 function MyGame() {
     this.hero = null;
     this.patrol = null;
+    this.shouldShowBB = false;
     this.mMsg = null;
 }
 MyGame.kSpriteSheet = "assets/SpriteSheet.png";
@@ -53,6 +54,7 @@ MyGame.prototype.draw = function () {
     this.hero.draw(MyGame.mMainCamera);
     MyGame.dyePackSet.draw(MyGame.mMainCamera);
     this.patrol.draw();
+    this.drawPatrolBoundingBoxes();
 };
 
 MyGame.prototype.update = function () {
@@ -60,7 +62,7 @@ MyGame.prototype.update = function () {
     MyGame.dyePackSet.update();
     this.patrol.update();
     checkIfDyePacksAreDestroyed();
-    this.printBB();
+    this.inputShouldShowBoundingBoxes();
 };
 
 function checkIfDyePacksAreDestroyed() {
@@ -71,6 +73,15 @@ function checkIfDyePacksAreDestroyed() {
     }
 }
 
-MyGame.prototype.printBB = function () {
-    console.log(this.hero.getBBox());
+MyGame.prototype.drawPatrolBoundingBoxes = function () {
+    if (this.shouldShowBB) {
+        this.patrol.boundingBox.drawBoundingBox(MyGame.mMainCamera);
+    }
+};
+
+MyGame.prototype.inputShouldShowBoundingBoxes = function () {
+    console.log(this.shouldShowBB);
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.B)) {
+        this.shouldShowBB = !this.shouldShowBB;
+    }
 };

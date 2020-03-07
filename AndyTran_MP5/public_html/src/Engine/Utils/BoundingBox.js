@@ -69,6 +69,22 @@ BoundingBox.prototype.boundCollideStatus = function (otherBound) {
     return status;
 };
 
+BoundingBox.prototype.getBoundingBoxLines = function () {
+    var leftLine = new LineRenderable(this.minX(), this.minY(), this.minX(), this.maxY());
+    var rightLine = new LineRenderable(this.maxX(), this.minY(), this.maxX(), this.maxY());
+    var topLine = new LineRenderable(this.minX(), this.maxY(), this.maxX(), this.maxY());
+    var bottomLine = new LineRenderable(this.minX(), this.minY(), this.maxX(), this.minY());
+    return [leftLine, rightLine, topLine, bottomLine];
+};
+
+BoundingBox.prototype.drawBoundingBox = function (aCamera) {
+    var box = this.getBoundingBoxLines();
+    for (var i = 0; i < box.length; i++) {
+        box[i].setColor([1, 0, 0, 1]);
+        box[i].draw(aCamera);
+    }
+};
+
 BoundingBox.prototype.minX = function () { return this.mLL[0]; };
 BoundingBox.prototype.maxX = function () { return this.mLL[0] + this.mWidth; };
 BoundingBox.prototype.minY = function () { return this.mLL[1]; };
