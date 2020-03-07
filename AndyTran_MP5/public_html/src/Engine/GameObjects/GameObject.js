@@ -15,23 +15,42 @@ function GameObject(renderableObj) {
     this.mCurrentFrontDir = vec2.fromValues(0, 1);  // this is the current front direction of the object
     this.mSpeed = 0;
 }
-GameObject.prototype.getXform = function () { return this.mRenderComponent.getXform(); };
+
+GameObject.prototype.getXform = function () {
+    return this.mRenderComponent.getXform();
+};
 GameObject.prototype.getBBox = function () {
     var xform = this.getXform();
     var b = new BoundingBox(xform.getPosition(), xform.getWidth(), xform.getHeight());
     return b;
 };
-GameObject.prototype.setVisibility = function (f) { this.mVisible = f; };
-GameObject.prototype.isVisible = function () { return this.mVisible; };
+GameObject.prototype.setVisibility = function (f) {
+    this.mVisible = f;
+};
+GameObject.prototype.isVisible = function () {
+    return this.mVisible;
+};
 
-GameObject.prototype.setSpeed = function (s) { this.mSpeed = s; };
-GameObject.prototype.getSpeed = function () { return this.mSpeed; };
-GameObject.prototype.incSpeedBy = function (delta) { this.mSpeed += delta; };
+GameObject.prototype.setSpeed = function (s) {
+    this.mSpeed = s;
+};
+GameObject.prototype.getSpeed = function () {
+    return this.mSpeed;
+};
+GameObject.prototype.incSpeedBy = function (delta) {
+    this.mSpeed += delta;
+};
 
-GameObject.prototype.setCurrentFrontDir = function (f) { vec2.normalize(this.mCurrentFrontDir, f); };
-GameObject.prototype.getCurrentFrontDir = function () { return this.mCurrentFrontDir; };
+GameObject.prototype.setCurrentFrontDir = function (f) {
+    vec2.normalize(this.mCurrentFrontDir, f);
+};
+GameObject.prototype.getCurrentFrontDir = function () {
+    return this.mCurrentFrontDir;
+};
 
-GameObject.prototype.getRenderable = function () { return this.mRenderComponent; };
+GameObject.prototype.getRenderable = function () {
+    return this.mRenderComponent;
+};
 
 // Orientate the entire object to point towards point p
 // will rotate Xform() accordingly
