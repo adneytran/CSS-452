@@ -43,7 +43,6 @@ DyePack.prototype.checkLifespan = function () {
     var xForm = this.dyePackSprite.getXform();
     if (this.lifespan <= 0)
     {
-        // this.dyePackSprite = null;
         this.shouldBeDestroyed = true;
         return;
     }
@@ -59,15 +58,8 @@ DyePack.prototype.checkBounds = function(xForm) {
     }
 };
 
-DyePack.prototype.inputCheckShake = function () {
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S)) //Replace this with when dye pack hits patrol.
-    {
-        this.setShake();
-    }
-    if (this.oscillate === true)
-    {
-        this.checkShake();
-    }
+DyePack.prototype.hit = function() {
+    
 };
 
 DyePack.prototype.setShake = function () {

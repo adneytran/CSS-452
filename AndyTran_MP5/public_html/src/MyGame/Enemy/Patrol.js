@@ -41,6 +41,9 @@ Patrol.prototype.draw = function () {
 Patrol.prototype.update = function () {
     this.bottomWing.wingInterpolation(this.oldHeadPos);
     this.topWing.wingInterpolation(this.oldHeadPos);
+    this.head.update();
+    this.bottomWing.update();
+    this.topWing.update();
     this.updateHeadPos();
     this.checkTermination();
     this.boundingBox = this.updateBoundingBox();
