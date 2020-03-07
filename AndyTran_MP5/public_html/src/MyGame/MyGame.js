@@ -14,10 +14,8 @@
 
 function MyGame() {
     this.hero = null;
-    this.patrol = null;
     this.shouldShowBB = false;
 
-    this.isCollided = false;
     this.mMsg = null;
 }
 
@@ -35,6 +33,7 @@ MyGame.prototype.unloadScene = function () {
 };
 
 MyGame.dyePackSet = new GameObjectSet();
+MyGame.patrolSet = new GameObjectSet();
 
 MyGame.mMainCamera = new Camera(
     vec2.fromValues(30, 30), // position of the camera
@@ -45,9 +44,12 @@ MyGame.mMainCamera = new Camera(
 
 MyGame.prototype.initialize = function () {
     MyGame.mMainCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-
     this.hero = new Hero(MyGame.kSpriteSheet);
-    this.patrol = new Patrol(MyGame.kSpriteSheet);
+    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
+    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
+    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
+    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
+    MyGame.patrolSet.addToSet(new Patrol(MyGame.kSpriteSheet));
 };
 
 MyGame.prototype.draw = function () {
@@ -55,14 +57,14 @@ MyGame.prototype.draw = function () {
     MyGame.mMainCamera.setupViewProjection();
     this.hero.draw(MyGame.mMainCamera);
     MyGame.dyePackSet.draw(MyGame.mMainCamera);
-    this.patrol.draw();
+    MyGame.patrolSet.draw(MyGame.mMainCamera);
     this.drawPatrolBoundingBoxes();
 };
 
 MyGame.prototype.update = function () {
     this.hero.update();
     MyGame.dyePackSet.update();
-    this.patrol.update();
+    MyGame.patrolSet.update();
     checkIfDyePacksAreDestroyed();
     this.inputShouldShowBoundingBoxes();
     this.TEST_heroEntersPatrolBoundingBox();
@@ -78,10 +80,13 @@ function checkIfDyePacksAreDestroyed() {
 
 MyGame.prototype.drawPatrolBoundingBoxes = function () {
     if (this.shouldShowBB) {
-        this.patrol.boundingBox.drawBoundingBox(MyGame.mMainCamera);
-        this.patrol.head.headBoundingBox.drawBoundingBox(MyGame.mMainCamera);
-        this.patrol.bottomWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
-        this.patrol.topWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+        for (var i = 0; i < MyGame.patrolSet.size(); i++) {
+            var patrol = MyGame.patrolSet.getObjectAt(i);
+            patrol.boundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.head.headBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.bottomWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+            patrol.topWing.wingBoundingBox.drawBoundingBox(MyGame.mMainCamera);
+        }
     }
 };
 
