@@ -3,10 +3,12 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 
+const size = [9, 12];
+
 function Hero(aSpriteTexture) {
     this.heroSprite = new SpriteRenderable(aSpriteTexture);
     this.heroSprite.getXform().setPosition(30, 30);
-    this.heroSprite.getXform().setSize(9, 12);
+    this.heroSprite.getXform().setSize(size[0], size[1]);
     this.heroSprite.setElementPixelPositions(5, 125, 0, 180);
     this.oscillate = false;
     this.interpolateX = new Interpolate(this.heroSprite.getXform().getXPos(), 120, 0.05);
@@ -41,7 +43,7 @@ Hero.prototype.checkShake = function () {
     else
     { 
         var shakeSize = this.shake.getShakeResults();
-        this.heroSprite.getXform().setSize(this.size[0] + shakeSize[0], this.size[1] + shakeSize[1]);
+        this.heroSprite.getXform().setSize(size[0] + shakeSize[0], size[1] + shakeSize[1]);
     }
 };
 

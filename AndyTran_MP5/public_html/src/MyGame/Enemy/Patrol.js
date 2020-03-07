@@ -16,11 +16,12 @@ function Patrol(aSpriteTexture) {
     this.normalizedDirection = [];
     this.randomSpeed = Math.random() * (10 - 5) + 5;
     this.oldHeadPos = [];
+    this.shouldBeDestroyed = false;
     //GameObject.call(this, this.head);
     this.initialize();
 }
 
-//gEngine.Core.inheritPrototype(Patrol, GameObject);
+gEngine.Core.inheritPrototype(Patrol, GameObject);
 
 const WING_TYPE_BOTTOM = "bottomWing";
 const WING_TYPE_TOP = "topWing";
@@ -80,12 +81,10 @@ Patrol.prototype.updateHeadPos = function () {
 
 Patrol.prototype.checkTermination = function () {
     if ((this.head.headSprite.getXform().getXPos() - this.head.headSprite.getXform().getWidth() / 2)
-        >= (MyGame.mMainCamera.getWCCenter() +
-            MyGame.mMainCamera.getWCWidth() / 2) || this.bottomWing.wingSprite.getColor()[3]
-        >= 1.0 || this.topWing.wingSprite.getColor()[3] >= 1.0) {
-        this.head = null;
-        this.wingOne = null;
-        this.wingTwo = null;
+        >= (30 + MyGame.mMainCamera.getWCWidth() / 2) || 
+        this.bottomWing.wingSprite.getColor()[3] >= 1.0 || 
+        this.topWing.wingSprite.getColor()[3] >= 1.0) {
+        this.shouldBeDestroyed = true;
     }
 };
 
@@ -107,6 +106,13 @@ Patrol.prototype.updateBoundingBox = function () {
     var boxWidth = boxLR[0] - boxLL[0];
     var centerBoxPosition = [boxLL[0] + boxWidth / 2, boxLL[1] + boxHeight / 2];
     return new BoundingBox(centerBoxPosition, boxWidth, boxHeight);
+};
+
+Patrol.prototype.checkHitInput = function () {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J))
+    {
+        this.head.hit();
+    }
 };
 
 
