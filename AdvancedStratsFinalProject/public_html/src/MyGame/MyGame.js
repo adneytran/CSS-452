@@ -15,7 +15,7 @@ const draggableStates = {
     NEUTRAL: "neutral",
     CLICK: "click",
     DRAG: "drag",
-    RELEASE: "release",
+    RELEASE: "release"
 };
 
 function MyGame() {
@@ -27,13 +27,15 @@ function MyGame() {
     for (var i = 0; i < this.renderableStorage.length; i++) {
         this.renderableStorage[i] = new Array(10);
     }
-
+    this.mMsg = null;
+    this.secondMsg = null;
     this.lastPos = [];
     this.selectedRenderable = null;
     this.testRenderable = null;
     this.testRenderable2 = null;
     this.dragState = draggableStates.NEUTRAL;
     this.velocity = 0;
+    this.timer = 0;
 }
 
 gEngine.Core.inheritPrototype(MyGame, Scene);
@@ -70,6 +72,15 @@ MyGame.prototype.initialize = function () {
     this.testRenderable.getXform().setPosition(newCell[0], newCell[1]);
     this.testRenderable2.getXform().setPosition(newCell2[0], newCell2[1]);
     //this.lastPos = [5, 5];
+    this.mMsg = new FontRenderable("Status Message");
+    this.mMsg.setColor([0, 0, 0, 1]);
+    this.mMsg.getXform().setPosition(10 - this.mCamera.getWCWidth() / 2 + .3, 10 - this.mCamera.getWCHeight() / 2 + .5);
+    this.mMsg.setTextHeight(.5);
+    
+    this.secondMsg = new FontRenderable("Status Message");
+    this.secondMsg.setColor([0, 0, 0, 1]);
+    this.secondMsg.getXform().setPosition(10 - this.mCamera.getWCWidth() / 2 + 7, 10 - this.mCamera.getWCHeight() / 2 + .5);
+    this.secondMsg.setTextHeight(.5);
 
 };
 
@@ -81,6 +92,11 @@ MyGame.prototype.draw = function () {
     this.mGrid.draw(this.mCamera);
     this.testRenderable.draw(this.mCamera);
     this.testRenderable2.draw(this.mCamera);
+    this.mMsg.draw(this.mCamera);
+    if (this.timer > 0)
+    {
+        this.secondMsg.draw(this.mCamera);
+    }
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
@@ -88,7 +104,7 @@ MyGame.prototype.draw = function () {
 MyGame.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
     this.configureDraggableState();
-    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)) {
+    if (this.dragState === draggableStates.CLICK) {
         this.selectRenderable();
     }
     if (this.dragState === draggableStates.DRAG) {
@@ -101,6 +117,12 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
     {
         this.unloadScene();
+    }
+    this.updateMessage();
+    this.checkSecondMessage();
+    if (this.timer > 0)
+    {
+        this.timer--;
     }
 };
 
@@ -179,12 +201,37 @@ MyGame.prototype.releaseRenderable = function () {
 
 MyGame.prototype.configureDraggableState = function () {
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.NEUTRAL) {
-        this.dragState = draggableStates.DRAG;
+        this.dragState = draggableStates.CLICK;
         //aDragFunction();
+    }
+    else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.CLICK)
+    {
+        this.dragState = draggableStates.DRAG;
     } else if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.DRAG) {
         this.dragState = draggableStates.RELEASE;
         //aReleaseFunction();
     } else if (this.dragState === draggableStates.RELEASE) {
         this.dragState = draggableStates.NEUTRAL;
+    }
+};
+
+MyGame.prototype.updateMessage = function () {
+    var msg = "Drag State: " + this.dragState;
+    this.mMsg.setText(msg);
+};
+
+MyGame.prototype.checkSecondMessage = function () {
+    var msg = "";
+    if (this.dragState === draggableStates.CLICK)
+    {
+        msg = "Mouse Clicked";
+        this.timer = 60;
+        this.secondMsg.setText(msg);
+    }
+    else if (this.dragState === draggableStates.RELEASE)
+    {
+        msg = "Mouse Released";
+        this.timer = 60;
+        this.secondMsg.setText(msg);
     }
 };

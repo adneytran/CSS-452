@@ -21,6 +21,9 @@ function VelocityLevel() {
     this.dragState = draggableStates.NEUTRAL;
     this.velocity = 0;
     this.direction = [0, 0];
+    this.mMsg = null;
+    this.secondMsg = null;
+    this.timer = 0;
 }
 
 gEngine.Core.inheritPrototype(VelocityLevel, Scene);
@@ -45,6 +48,16 @@ VelocityLevel.prototype.initialize = function () {
     this.testRenderable.setColor([1, 0, 0, 1]);
 
     this.testRenderable.getXform().setPosition(10, 10);
+    
+    this.mMsg = new FontRenderable("Status Message");
+    this.mMsg.setColor([0, 0, 0, 1]);
+    this.mMsg.getXform().setPosition(10 - this.mCamera.getWCWidth() / 2 + .3, 10 - this.mCamera.getWCHeight() / 2 + .5);
+    this.mMsg.setTextHeight(.5);
+    
+    this.secondMsg = new FontRenderable("Status Message");
+    this.secondMsg.setColor([0, 0, 0, 1]);
+    this.secondMsg.getXform().setPosition(10 - this.mCamera.getWCWidth() / 2 + 7, 10 - this.mCamera.getWCHeight() / 2 + .5);
+    this.secondMsg.setTextHeight(.5);
 };
 
 VelocityLevel.prototype.draw = function () {
@@ -53,23 +66,37 @@ VelocityLevel.prototype.draw = function () {
 
     this.mCamera.setupViewProjection();
     this.testRenderable.draw(this.mCamera);
+    this.mMsg.draw(this.mCamera);
+    if (this.timer > 0)
+    {
+        this.secondMsg.draw(this.mCamera);
+    }
 };
 
 VelocityLevel.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
     this.configureDraggableState();
-    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)) {
+    if (this.dragState === draggableStates.CLICK) {
         this.selectRenderable();
     }
     if (this.dragState === draggableStates.DRAG) {
         this.dragRenderable();
     }
-
     if (this.dragState === draggableStates.RELEASE) {
         this.releaseRenderable();
     }
     if (this.dragState === draggableStates.NEUTRAL) {
         this.neutralRenderable();
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
+    {
+        this.unloadScene();
+    }
+    this.updateMessage();
+    this.checkSecondMessage();
+    if (this.timer > 0)
+    {
+        this.timer--;
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
         this.unloadScene();
@@ -101,8 +128,12 @@ VelocityLevel.prototype.neutralRenderable = function () {
 
 VelocityLevel.prototype.configureDraggableState = function () {
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.NEUTRAL) {
-        this.dragState = draggableStates.DRAG;
+        this.dragState = draggableStates.CLICK;
         //aDragFunction();
+    }
+    else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.CLICK)
+    {
+        this.dragState = draggableStates.DRAG;
     } else if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.DRAG) {
         this.dragState = draggableStates.RELEASE;
         //aReleaseFunction();
@@ -120,4 +151,25 @@ VelocityLevel.prototype.getVelocity = function (newPos) {
 VelocityLevel.prototype.getDirection = function (newPos) {
     return [(newPos[0] - this.lastPos[0]) / this.velocity,
         (newPos[1] - this.lastPos[1]) / this.velocity];
+};
+
+VelocityLevel.prototype.updateMessage = function () {
+    var msg = "Drag State: " + this.dragState;
+    this.mMsg.setText(msg);
+};
+
+VelocityLevel.prototype.checkSecondMessage = function () {
+    var msg = "";
+    if (this.dragState === draggableStates.CLICK)
+    {
+        msg = "Mouse Clicked";
+        this.timer = 60;
+        this.secondMsg.setText(msg);
+    }
+    else if (this.dragState === draggableStates.RELEASE)
+    {
+        msg = "Mouse Released";
+        this.timer = 60;
+        this.secondMsg.setText(msg);
+    }
 };
