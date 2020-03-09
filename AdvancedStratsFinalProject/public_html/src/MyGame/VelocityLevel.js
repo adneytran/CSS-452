@@ -1,5 +1,5 @@
 /*
- * File: MyGame.js 
+ * File: VelocityLevel.js 
  * This is the logic of our game. 
  */
 
@@ -11,14 +11,9 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-const draggableStates = {
-    NEUTRAL: "neutral",
-    CLICK: "click",
-    DRAG: "drag",
-    RELEASE: "release",
-};
 
-function MyGame() {
+
+function VelocityLevel() {
 
     this.mCamera = null;
     this.mGrid = null;
@@ -34,16 +29,17 @@ function MyGame() {
     this.testRenderable2 = null;
     this.dragState = draggableStates.NEUTRAL;
     this.velocity = 0;
+    this.direction = [];
 }
 
-gEngine.Core.inheritPrototype(MyGame, Scene);
+gEngine.Core.inheritPrototype(VelocityLevel, Scene);
 
-MyGame.prototype.unloadScene = function () {
+VelocityLevel.prototype.unloadScene = function () {
     var nextLevel = new VelocityLevel();  // load the next level
     gEngine.Core.startScene(nextLevel);
 };
 
-MyGame.prototype.initialize = function () {
+VelocityLevel.prototype.initialize = function () {
 
     this.mCamera = new Camera(
         vec2.fromValues(10, 10), // position of the camera
@@ -58,34 +54,34 @@ MyGame.prototype.initialize = function () {
     this.testRenderable = new Renderable();
     this.testRenderable.getXform().setSize(1.9, 1.9);
     this.testRenderable.setColor([1, 0, 0, 1]);
-    this.testRenderable2 = new Renderable();
-    this.testRenderable2.getXform().setSize(1.9, 1.9);
-    this.testRenderable2.setColor([0, 1, 0, 1]);
+    //this.testRenderable2 = new Renderable();
+    //this.testRenderable2.getXform().setSize(1.9, 1.9);
+    //this.testRenderable2.setColor([0, 1, 0, 1]);
     var newCell = this.convertCellCoordinateToWC(5, 5);
-    var newCell2 = this.convertCellCoordinateToWC(3, 7);
+    //var newCell2 = this.convertCellCoordinateToWC(3, 7);
 
     this.renderableStorage[5][5] = this.testRenderable;
-    this.renderableStorage[3][7] = this.testRenderable2;
+    //this.renderableStorage[3][7] = this.testRenderable2;
 
     this.testRenderable.getXform().setPosition(newCell[0], newCell[1]);
-    this.testRenderable2.getXform().setPosition(newCell2[0], newCell2[1]);
+    //this.testRenderable2.getXform().setPosition(newCell2[0], newCell2[1]);
     //this.lastPos = [5, 5];
 
 };
 
-MyGame.prototype.draw = function () {
+VelocityLevel.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
     this.mCamera.setupViewProjection();
     this.mGrid.draw(this.mCamera);
     this.testRenderable.draw(this.mCamera);
-    this.testRenderable2.draw(this.mCamera);
+    //this.testRenderable2.draw(this.mCamera);
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
-MyGame.prototype.update = function () {
+VelocityLevel.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
     this.configureDraggableState();
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)) {
@@ -104,15 +100,15 @@ MyGame.prototype.update = function () {
     }
 };
 
-MyGame.prototype.convertCellCoordinateToWC = function (cellX, cellY) {
+VelocityLevel.prototype.convertCellCoordinateToWC = function (cellX, cellY) {
     return [cellX * 2 + 1, cellY * 2 + 1];
 };
 
-MyGame.prototype.convertWCtoCellCoordinate = function (wcX, wcY) {
+VelocityLevel.prototype.convertWCtoCellCoordinate = function (wcX, wcY) {
     return [Math.floor(wcX / 2), Math.floor(wcY / 2)];
 };
 
-MyGame.prototype.getCellWCPositionFromMousePosition = function () {
+VelocityLevel.prototype.getCellWCPositionFromMousePosition = function () {
     var x = this.mCamera.mouseWCX();
     var y = this.mCamera.mouseWCY();
     x = Math.floor(x);
@@ -136,7 +132,7 @@ MyGame.prototype.getCellWCPositionFromMousePosition = function () {
 // };
 
 
-MyGame.prototype.selectRenderable = function () {
+VelocityLevel.prototype.selectRenderable = function () {
     var cellPosition = this.getCellWCPositionFromMousePosition();
     if (cellPosition) {
         var cellCoordinate = this.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
@@ -147,18 +143,17 @@ MyGame.prototype.selectRenderable = function () {
     }
 };
 
-MyGame.prototype.dragRenderable = function () {
+VelocityLevel.prototype.dragRenderable = function () {
     if (this.selectedRenderable) {
         this.selectedRenderable.getXform().setPosition(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());
     }
 };
 
-MyGame.prototype.releaseRenderable = function () {
+VelocityLevel.prototype.releaseRenderable = function () {
     if (this.selectedRenderable) {
         var cellWCPosition = this.getCellWCPositionFromMousePosition();
         var cellPosition = this.convertWCtoCellCoordinate(cellWCPosition[0], cellWCPosition[1]);
-        var otherRenderable = this.renderableStorage[cellPosition[0]][cellPosition[1]];
-
+        /*var otherRenderable = this.renderableStorage[cellPosition[0]][cellPosition[1]];
 
         if (otherRenderable) {
             var lastWCPosition = this.convertCellCoordinateToWC(this.lastPos[0], this.lastPos[1]);
@@ -173,11 +168,16 @@ MyGame.prototype.releaseRenderable = function () {
             this.selectedRenderable.getXform().setPosition(cellWCPosition[0], cellWCPosition[1]);
             this.selectedRenderable = null;
             this.lastPos = null;
-        }
+        }*/
+        this.velocity = this.getVelocity(cellWCPosition);
+        this.direction = this.getDirection(cellWCPosition);
+        this.selectedRenderable.getXform().incXPosBy(-this.direction[0] * this.velocity);
+        this.selectedRenderable.getXform().incYPosBy(-this.direction[1] * this.velocity);
+        console.log(this.selectedRenderable.getXform().getPosition());
     }
 };
 
-MyGame.prototype.configureDraggableState = function () {
+VelocityLevel.prototype.configureDraggableState = function () {
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.NEUTRAL) {
         this.dragState = draggableStates.DRAG;
         //aDragFunction();
@@ -189,12 +189,12 @@ MyGame.prototype.configureDraggableState = function () {
     }
 };
 
-MyGame.prototype.getVelocity = function (newPos) {
+VelocityLevel.prototype.getVelocity = function (newPos) {
     return Math.abs(Math.sqrt(Math.pow(newPos[0] - this.lastPos[0], 2)
             + Math.pow(newPos[1] - this.lastPos[1], 2)));
 };
 
-MyGame.prototype.getDirection = function (newPos) {
+VelocityLevel.prototype.getDirection = function (newPos) {
     return [(newPos[0] - this.lastPos[0]) / this.velocity, 
         (newPos[1] - this.lastPos[1]) / this.velocity];
 };
