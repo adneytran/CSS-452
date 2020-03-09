@@ -19,7 +19,10 @@ function MyGame() {
     this.grid = null;
     this.verticalLines = [];
     this.horizontalLines = [];
-    this.newCoordinates = [];
+    this.newCoordinates = new Array(10);
+    for (var i = 0; i < this.newCoordinates.length; i++) {
+        this.newCoordinates[i] = new Array(10);
+    }
     this.testRenderable = null;
 }
 gEngine.Core.inheritPrototype(MyGame, Scene);
@@ -46,19 +49,17 @@ MyGame.prototype.initialize = function () {
     
     for (var i = 0; i <=20; i += 2)
     {
-        var lineRenderable = new LineRenderable(i, 0, i, 20);
-        this.verticalLines.push(lineRenderable);
+        this.verticalLines.push(new LineRenderable(i, 0, i, 20));
     }
     for (var i = 0; i <= 20; i += 2)
     {
-        var lineRenderable = new LineRenderable(0, i, 20, i);
-        this.horizontalLines.push(lineRenderable);
+        this.horizontalLines.push(new LineRenderable(0, i, 20, i));
     }
     
     this.testRenderable = new Renderable();
     this.testRenderable.getXform().setSize(1.9, 1.9);
     this.testRenderable.setColor([1, 0, 0, 1]);
-    var newCell = this.getCell(5, 5);
+    var newCell = this.convertCellCoordinateToWC(5, 5);
     this.testRenderable.getXform().setPosition(newCell[0], newCell[1]);
 
 };
@@ -88,22 +89,43 @@ MyGame.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left))
     {
-        var x = this.mCamera.mouseWCX();
-        var y = this.mCamera.mouseWCY();
-        x = Math.floor(x);
-        y = Math.floor(y);
-        if (x % 2 === 0)
-        {
-            x++;
+        var cellPosition = this.getCellWCPositionFromMousePosition();
+        if (cellPosition) {
+            var cellCoordinate = this.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
+            this.newCoordinates[cellCoordinate[0]][cellCoordinate[1]] = this.testRenderable;
+            this.testRenderable.getXform().setPosition(cellPosition[0], cellPosition[1]);
         }
-        if (y % 2 === 0)
-        {
-            y++;
-        }
-        this.testRenderable.getXform().setPosition(x, y);
     }
+
+    if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left)) {
+        console.log("awawawawawa");
+    }
+
 };
 
-MyGame.prototype.getCell = function (cellX, cellY) {
+MyGame.prototype.convertCellCoordinateToWC = function (cellX, cellY) {
     return [cellX * 2 + 1, cellY * 2 + 1];
+};
+
+MyGame.prototype.convertWCtoCellCoordinate = function (wcX, wcY) {
+    return [Math.floor(wcX / 2), Math.floor(wcY / 2)];
+};
+
+MyGame.prototype.getCellWCPositionFromMousePosition = function () {
+    var x = this.mCamera.mouseWCX();
+    var y = this.mCamera.mouseWCY();
+    x = Math.floor(x);
+    y = Math.floor(y);
+    if (x % 2 === 0)
+    {
+        x++;
+    }
+    if (y % 2 === 0)
+    {
+        y++;
+    }
+    if (x > 20 || y > 20) {
+        return null;
+    }
+    return [x, y];
 };

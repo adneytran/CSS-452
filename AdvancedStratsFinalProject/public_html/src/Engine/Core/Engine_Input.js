@@ -78,13 +78,13 @@ gEngine.Input = (function () {
     var mIsKeyPressed = [];
     // Click events: once an event is set, it will remain there until polled
     var mIsKeyClicked = [];
-
-
     // Support mouse
     var mCanvas = null;
+
     var mButtonPreviousState = [];
     var mIsButtonPressed = [];
     var mIsButtonClicked = [];
+    var mIsButtonReleased = [];
     var mMousePosX = -1;
     var mMousePosY = -1;
 
@@ -146,6 +146,7 @@ gEngine.Input = (function () {
             mButtonPreviousState[i] = false;
             mIsButtonPressed[i] = false;
             mIsButtonClicked[i] = false;
+            mIsButtonReleased[i] = false;
         }
         window.addEventListener('mousedown', _onMouseDown);
         window.addEventListener('mouseup', _onMouseUp);
@@ -162,6 +163,7 @@ gEngine.Input = (function () {
         }
         for (i = 0; i < 3; i++) {
             mIsButtonClicked[i] = (!mButtonPreviousState[i]) && mIsButtonPressed[i];
+            mIsButtonReleased[i] =  (!mIsButtonPressed[i] && mButtonPreviousState[i]);
             mButtonPreviousState[i] = mIsButtonPressed[i];
         }
     };
@@ -182,6 +184,11 @@ gEngine.Input = (function () {
     var isButtonClicked = function (button) {
         return mIsButtonClicked[button];
     };
+
+    var isButtonReleased = function (button) {
+        return mIsButtonReleased[button];
+    };
+
     var getMousePosX = function () { return mMousePosX; };
     var getMousePosY = function () { return mMousePosY; };
 
@@ -197,6 +204,7 @@ gEngine.Input = (function () {
         // Mouse support
         isButtonPressed: isButtonPressed,
         isButtonClicked: isButtonClicked,
+        isButtonReleased: isButtonReleased,
         getMousePosX: getMousePosX,       // invalid if no corresponding buttonPressed or buttonClicked
         getMousePosY: getMousePosY,
         mouseButton: kMouseButton
