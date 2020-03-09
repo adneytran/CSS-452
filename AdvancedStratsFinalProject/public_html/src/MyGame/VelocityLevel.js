@@ -28,8 +28,16 @@ function VelocityLevel() {
 
 gEngine.Core.inheritPrototype(VelocityLevel, Scene);
 
-VelocityLevel.prototype.unloadScene = function () {
-    var nextLevel = new VelocityLevel();  // load the next level
+VelocityLevel.prototype.unloadScene = function (type) {
+    var nextLevel = null;
+    if (type === "MyGame")
+    {
+        nextLevel = new MyGame();  // load the next level
+    }
+    else if (type === "DoubleClick")
+    {
+        nextLevel = new DoubleClick();
+    }
     gEngine.Core.startScene(nextLevel);
 };
 
@@ -88,10 +96,6 @@ VelocityLevel.prototype.update = function () {
     if (this.dragState === draggableStates.NEUTRAL) {
         this.neutralRenderable();
     }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
-    {
-        this.unloadScene();
-    }
     this.updateMessage();
     this.checkSecondMessage();
     if (this.timer > 0)
@@ -99,7 +103,10 @@ VelocityLevel.prototype.update = function () {
         this.timer--;
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
-        this.unloadScene();
+        this.unloadScene("MyGame");
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C)) {
+        this.unloadScene("DoubleClick");
     }
 };
 

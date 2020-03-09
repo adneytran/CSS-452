@@ -40,8 +40,16 @@ function MyGame() {
 
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
-MyGame.prototype.unloadScene = function () {
-    var nextLevel = new VelocityLevel();  // load the next level
+MyGame.prototype.unloadScene = function (type) {
+    var nextLevel = null;
+    if (type === "Velocity")
+    {
+        nextLevel = new VelocityLevel();  // load the next level
+    }
+    else if (type === "DoubleClick")
+    {
+        nextLevel = new DoubleClick();
+    }
     gEngine.Core.startScene(nextLevel);
 };
 
@@ -114,9 +122,13 @@ MyGame.prototype.update = function () {
     if (this.dragState === draggableStates.RELEASE) {
         this.releaseRenderable();
     }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.V))
     {
-        this.unloadScene();
+        this.unloadScene("Velocity");
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C))
+    {
+        this.unloadScene("DoubleClick");
     }
     this.updateMessage();
     this.checkSecondMessage();
