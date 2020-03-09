@@ -19,9 +19,11 @@ function MyGame() {
     this.grid = null;
     this.verticalLines = [];
     this.horizontalLines = [];
-    this.newCoordinates = new Array(10);
-    for (var i = 0; i < this.newCoordinates.length; i++) {
-        this.newCoordinates[i] = new Array(10);
+    this.selectedRenderable = null;
+    this.renderableStorage = new Array(10);
+    this.lastPos = [];
+    for (var i = 0; i < this.renderableStorage.length; i++) {
+        this.renderableStorage[i] = new Array(10);
     }
     this.testRenderable = null;
 }
@@ -61,6 +63,7 @@ MyGame.prototype.initialize = function () {
     this.testRenderable.setColor([1, 0, 0, 1]);
     var newCell = this.convertCellCoordinateToWC(5, 5);
     this.testRenderable.getXform().setPosition(newCell[0], newCell[1]);
+    this.lastPos = [5, 5];
 
 };
 
@@ -92,8 +95,17 @@ MyGame.prototype.update = function () {
         var cellPosition = this.getCellWCPositionFromMousePosition();
         if (cellPosition) {
             var cellCoordinate = this.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
-            this.newCoordinates[cellCoordinate[0]][cellCoordinate[1]] = this.testRenderable;
-            this.testRenderable.getXform().setPosition(cellPosition[0], cellPosition[1]);
+            if (this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]])
+            {
+                this.selectedRenderable = this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]];
+            }
+            else
+            {
+                this.renderableStorage[this.lastPos[0]][this.lastPos[1]] = null;
+                this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]] = this.testRenderable;
+                this.testRenderable.getXform().setPosition(cellPosition[0], cellPosition[1]);
+                this.lastPos = this.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
+            }
         }
     }
 
@@ -124,7 +136,7 @@ MyGame.prototype.getCellWCPositionFromMousePosition = function () {
     {
         y++;
     }
-    if (x > 20 || y > 20) {
+    if (x > 20 || y > 20 || x < 0 || y < 0) {
         return null;
     }
     return [x, y];
