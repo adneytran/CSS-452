@@ -188,13 +188,3 @@ MyGame.prototype.configureDraggableState = function () {
         this.dragState = draggableStates.NEUTRAL;
     }
 };
-
-MyGame.prototype.getVelocity = function (newPos) {
-    return Math.abs(Math.sqrt(Math.pow(newPos[0] - this.lastPos[0], 2)
-            + Math.pow(newPos[1] - this.lastPos[1], 2)));
-};
-
-MyGame.prototype.getDirection = function (newPos) {
-    return [(newPos[0] - this.lastPos[0]) / this.velocity, 
-        (newPos[1] - this.lastPos[1]) / this.velocity];
-};
