@@ -103,7 +103,6 @@ DoubleClick.prototype.update = function () {
     this.configureClickState();
     if (this.doubleClick === true)
     {
-        console.log(this.selectedRenderable);
         if (this.selectedRenderable)
         {
             this.selectedRenderable.setColor([0, 0, 1, 1]);

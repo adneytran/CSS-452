@@ -36,6 +36,8 @@ function MyGame() {
     this.dragState = draggableStates.NEUTRAL;
     this.velocity = 0;
     this.timer = 0;
+    this.doubleClick = false;
+    this.doubleClickTimer = 0;
 }
 
 gEngine.Core.inheritPrototype(MyGame, Scene);
@@ -112,6 +114,14 @@ MyGame.prototype.draw = function () {
 MyGame.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
     this.configureDraggableState();
+    this.configureClickState();
+    if (this.doubleClick === true)
+    {
+        if (this.selectedRenderable)
+        {
+            this.selectedRenderable.setColor([0, 0, 1, 1]);
+        }
+    }
     if (this.dragState === draggableStates.CLICK) {
         this.selectRenderable();
     }
@@ -135,6 +145,14 @@ MyGame.prototype.update = function () {
     if (this.timer > 0)
     {
         this.timer--;
+    }
+    if (this.doubleClickTimer > 0)
+    {
+        this.doubleClickTimer--;
+    }
+    else
+    {
+        this.doubleClick = false;
     }
 };
 
@@ -245,5 +263,16 @@ MyGame.prototype.checkSecondMessage = function () {
         msg = "Mouse Released";
         this.timer = 60;
         this.secondMsg.setText(msg);
+    }
+};
+
+MyGame.prototype.configureClickState = function () {
+    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.doubleClickTimer === 0) {
+        this.doubleClickTimer = 20;
+        //aDragFunction();
+    }
+    else if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.doubleClickTimer > 0)
+    {
+        this.doubleClick = true;
     }
 };

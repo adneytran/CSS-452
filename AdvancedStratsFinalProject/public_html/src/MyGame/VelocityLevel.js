@@ -24,6 +24,7 @@ function VelocityLevel() {
     this.mMsg = null;
     this.secondMsg = null;
     this.timer = 0;
+    this.doubleClick = false;
 }
 
 gEngine.Core.inheritPrototype(VelocityLevel, Scene);
