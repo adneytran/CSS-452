@@ -11,13 +11,6 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-const draggableStates = {
-    NEUTRAL: "neutral",
-    CLICK: "click",
-    DRAG: "drag",
-    RELEASE: "release"
-};
-
 function MyGame() {
 
     this.mCamera = null;
@@ -29,15 +22,15 @@ function MyGame() {
     }
     this.mMsg = null;
     this.secondMsg = null;
-    this.lastPos = [];
     this.selectedRenderable = null;
     this.testRenderable = null;
     this.testRenderable2 = null;
-    this.dragState = draggableStates.NEUTRAL;
     this.velocity = 0;
     this.timer = 0;
     this.doubleClick = false;
     this.doubleClickTimer = 0;
+
+    this.myDragGestures = null;
 }
 
 gEngine.Core.inheritPrototype(MyGame, Scene);
@@ -47,10 +40,6 @@ MyGame.prototype.unloadScene = function (type) {
     if (type === "Velocity")
     {
         nextLevel = new VelocityLevel();  // load the next level
-    }
-    else if (type === "DoubleClick")
-    {
-        nextLevel = new DoubleClick();
     }
     gEngine.Core.startScene(nextLevel);
 };
@@ -73,15 +62,14 @@ MyGame.prototype.initialize = function () {
     this.testRenderable2 = new Renderable();
     this.testRenderable2.getXform().setSize(1.9, 1.9);
     this.testRenderable2.setColor([0, 1, 0, 1]);
-    var newCell = this.convertCellCoordinateToWC(5, 5);
-    var newCell2 = this.convertCellCoordinateToWC(3, 7);
-
     this.renderableStorage[5][5] = this.testRenderable;
     this.renderableStorage[3][7] = this.testRenderable2;
 
+    var newCell = this.convertCellCoordinateToWC(5, 5);
+    var newCell2 = this.convertCellCoordinateToWC(3, 7);
     this.testRenderable.getXform().setPosition(newCell[0], newCell[1]);
     this.testRenderable2.getXform().setPosition(newCell2[0], newCell2[1]);
-    //this.lastPos = [5, 5];
+
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
     this.mMsg.getXform().setPosition(10 - this.mCamera.getWCWidth() / 2 + .3, 10 - this.mCamera.getWCHeight() / 2 + .5);
@@ -91,6 +79,8 @@ MyGame.prototype.initialize = function () {
     this.secondMsg.setColor([0, 0, 0, 1]);
     this.secondMsg.getXform().setPosition(10 - this.mCamera.getWCWidth() / 2 + 7, 10 - this.mCamera.getWCHeight() / 2 + .5);
     this.secondMsg.setTextHeight(.5);
+
+    this.myDragGestures = new DragGesture(this.mCamera);
 
 };
 
@@ -113,7 +103,6 @@ MyGame.prototype.draw = function () {
 // anything from this function!
 MyGame.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
-    this.configureDraggableState();
     this.configureClickState();
     if (this.doubleClick === true)
     {
@@ -122,16 +111,20 @@ MyGame.prototype.update = function () {
             this.selectedRenderable.setColor([0, 0, 1, 1]);
         }
     }
-    if (this.dragState === draggableStates.CLICK) {
+
+
+    this.myDragGestures.configureDraggableState();
+    if (this.myDragGestures.dragState === draggableStates.CLICK) {
         this.selectRenderable();
     }
-    if (this.dragState === draggableStates.DRAG) {
+    if (this.myDragGestures.dragState === draggableStates.DRAG) {
         this.dragRenderable();
     }
-
-    if (this.dragState === draggableStates.RELEASE) {
+    if (this.myDragGestures.dragState === draggableStates.RELEASE) {
         this.releaseRenderable();
     }
+
+
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.V))
     {
         this.unloadScene("Velocity");
@@ -181,20 +174,12 @@ MyGame.prototype.getCellWCPositionFromMousePosition = function () {
     return [x, y];
 };
 
-// MyGame.prototype.swapRenderable = function() {
-//     this.renderableStorage[cellPosition[0]][cellPosition[1]].getXform().setPosition(this.lastPos[0], this.lastPos[1]);
-//     this.renderableStorage[cellPosition[0]][cellPosition[1]] = this.selectedRenderable;
-//     this.renderableStorage[this.lastPos[0]][this.lastPos[1]] =
-// };
-
-
 MyGame.prototype.selectRenderable = function () {
     var cellPosition = this.getCellWCPositionFromMousePosition();
     if (cellPosition) {
         var cellCoordinate = this.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
         if (this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]]) {
             this.selectedRenderable = this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]];
-            this.lastPos = [cellCoordinate[0], cellCoordinate[1]];
         }
     }
 };
@@ -211,54 +196,41 @@ MyGame.prototype.releaseRenderable = function () {
         var cellPosition = this.convertWCtoCellCoordinate(cellWCPosition[0], cellWCPosition[1]);
         var otherRenderable = this.renderableStorage[cellPosition[0]][cellPosition[1]];
 
+        var lastCellPosition = this.convertWCtoCellCoordinate(this.myDragGestures.lastPos[0], this.myDragGestures.lastPos[1]);
+        var lastCellPositionToWC = this.convertCellCoordinateToWC(lastCellPosition[0], lastCellPosition[1]);
+
 
         if (otherRenderable) {
-            var lastWCPosition = this.convertCellCoordinateToWC(this.lastPos[0], this.lastPos[1]);
             this.renderableStorage[cellPosition[0]][cellPosition[1]] = this.selectedRenderable;
-            this.renderableStorage[this.lastPos[0]][this.lastPos[1]] = otherRenderable;
-            otherRenderable.getXform().setPosition(lastWCPosition[0], lastWCPosition[1]);
+            this.renderableStorage[lastCellPosition[0]][lastCellPosition[1]] = otherRenderable;
+
+            otherRenderable.getXform().setPosition(lastCellPositionToWC[0], lastCellPositionToWC[1]);
             this.selectedRenderable.getXform().setPosition(cellWCPosition[0], cellWCPosition[1]);
 
         } else {
             this.renderableStorage[cellPosition[0]][cellPosition[1]] = this.selectedRenderable;
-            this.renderableStorage[this.lastPos[0]][this.lastPos[1]] = null;
+            this.renderableStorage[lastCellPosition[0]][lastCellPosition[1]] = null;
             this.selectedRenderable.getXform().setPosition(cellWCPosition[0], cellWCPosition[1]);
             this.selectedRenderable = null;
-            this.lastPos = null;
+            this.myDragGestures.lastPos = null;
         }
     }
 };
 
-MyGame.prototype.configureDraggableState = function () {
-    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.NEUTRAL) {
-        this.dragState = draggableStates.CLICK;
-        //aDragFunction();
-    }
-    else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.CLICK)
-    {
-        this.dragState = draggableStates.DRAG;
-    } else if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.DRAG) {
-        this.dragState = draggableStates.RELEASE;
-        //aReleaseFunction();
-    } else if (this.dragState === draggableStates.RELEASE) {
-        this.dragState = draggableStates.NEUTRAL;
-    }
-};
-
 MyGame.prototype.updateMessage = function () {
-    var msg = "Drag State: " + this.dragState;
+    var msg = "Drag State: " + this.myDragGestures.dragState;
     this.mMsg.setText(msg);
 };
 
 MyGame.prototype.checkSecondMessage = function () {
     var msg = "";
-    if (this.dragState === draggableStates.CLICK)
+    if (this.myDragGestures.dragState === draggableStates.CLICK)
     {
         msg = "Mouse Clicked";
         this.timer = 60;
         this.secondMsg.setText(msg);
     }
-    else if (this.dragState === draggableStates.RELEASE)
+    else if (this.myDragGestures.dragState === draggableStates.RELEASE)
     {
         msg = "Mouse Released";
         this.timer = 60;
