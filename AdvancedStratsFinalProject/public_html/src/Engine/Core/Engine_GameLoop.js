@@ -83,11 +83,10 @@ gEngine.GameLoop = (function () {
     var getUpdateIntervalInSeconds = function () {
         return kFrameTime;
     };
-    
-    var mPublic = {
+
+    return {
         start: start,
         stop: stop,
         getUpdateIntervalInSeconds: getUpdateIntervalInSeconds
     };
-    return mPublic;
 }());

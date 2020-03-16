@@ -1,32 +1,52 @@
 "use strict";
 
-const draggableStates = {
-    NEUTRAL: "neutral",
-    CLICK: "click",
-    DRAG: "drag",
-    RELEASE: "release"
-};
+var MouseGestures = (function () {
+    const draggableStates = {
+        NEUTRAL: "neutral",
+        CLICK: "click",
+        DRAG: "drag",
+        RELEASE: "release"
+    };
 
-function DragGesture (aCamera) {
-    this.lastPos = [];
-    this.mCamera = aCamera;
-    this.dragState = draggableStates.NEUTRAL;
-}
+    var startingDragPosition = [];
+    var mCamera = null;
+    var dragState = draggableStates.NEUTRAL;
 
-DragGesture.prototype.configureDraggableState = function () {
-    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.NEUTRAL) {
-        this.dragState = draggableStates.CLICK;
-        this.lastPos = [this.mCamera.mouseWCX(), this.mCamera.mouseWCY()];
-        //aDragFunction();
+    var setCamera = function(aCamera) {
+        mCamera = aCamera;
+    };
+
+    var configureDraggableState = function (aContext, aClickCallback) {
+        if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && dragState === draggableStates.NEUTRAL) {
+            dragState = draggableStates.CLICK;
+            startingDragPosition = [mCamera.mouseWCX(), mCamera.mouseWCY()];
+            aClickCallback();
+        } else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && dragState === draggableStates.CLICK) {
+            dragState = draggableStates.DRAG;
+        } else if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && dragState === draggableStates.DRAG) {
+            dragState = draggableStates.RELEASE;
+        } else if (dragState === draggableStates.RELEASE) {
+            dragState = draggableStates.NEUTRAL;
+        }
+    };
+
+    var getStartingDragPosition = function() {
+        return startingDragPosition;
+    };
+
+    var getDragState = function() {
+        return dragState;
+    };
+
+    var getDraggableStates = function() {
+        return draggableStates;
+    };
+
+    return {
+        setCamera: setCamera,
+        configureDraggableState: configureDraggableState,
+        getStartingDragPosition: getStartingDragPosition,
+        getDragState: getDragState,
+        getDraggableStates: getDraggableStates
     }
-    else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.CLICK)
-    {
-        this.dragState = draggableStates.DRAG;
-    } else if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && this.dragState === draggableStates.DRAG) {
-        this.dragState = draggableStates.RELEASE;
-        //aReleaseFunction();
-        // this.lastPos = null;
-    } else if (this.dragState === draggableStates.RELEASE) {
-        this.dragState = draggableStates.NEUTRAL;
-    }
-};
+}());
