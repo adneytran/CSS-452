@@ -1,0 +1,21 @@
+Home:
+Mouse Gesture API Documentation
+
+By: Andy Tran and Kellan who didn't do shit
+
+This API streamlines common mouse gestures found in games. Features include
+dragging, flicking, double clicking, and long pressing. The modules are built
+by breaking each gestures into distinct states of that gesture and allowing
+the user to pass in callback functions in each state.
+
+The API requires a camera to track mouse position with certain gestures, which
+can be set through the setCamera function. In order to "activate" each gesture,
+the corresponding check function (for example, checkForFlick for the flick gesture)
+must be called in the current scene's update function.
+
+Files:
+MouseGestures
+MouseGestures_Drag
+MouseGestures_Flick
+MouseGestures_DoubleClick
+MouseGestures_LongPress
