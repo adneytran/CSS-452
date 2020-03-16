@@ -10,7 +10,7 @@ MouseGestures.DoubleClick = (function () {
         }
     };
 
-    var _timerHasNotBegun = function () {
+    var _timerShouldStart = function () {
         return gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && myCountDownTimer === 0;
     };
 
@@ -20,9 +20,11 @@ MouseGestures.DoubleClick = (function () {
 
     var checkForDoubleClick = function (aCallback) {
         if (_clickedBeforeTimerRunsOut()) {
+            if (aCallback) {
             aCallback();
+            }
         }
-        if (_timerHasNotBegun()) {
+        if (_timerShouldStart()) {
             myCountDownTimer = DOUBLE_CLICK_TIMER;
         }
         _countDownTimer();

@@ -11,42 +11,26 @@ MouseGestures.Drag = (function () {
     var startingDragPosition = [];
     var dragState = draggableStates.NEUTRAL;
 
-    var myClickCallback = null;
-    var myDragCallback = null;
-    var myReleaseCallback = null;
-
-    var configureClickCallback = function (aClickCallback) {
-        myClickCallback = aClickCallback;
-    };
-
-    var configureDragCallback = function (aDragCallback) {
-        myDragCallback = aDragCallback;
-    };
-
-    var configureReleaseCallback = function (aReleaseCallback) {
-        myReleaseCallback = aReleaseCallback;
-    };
-
-    var configureAllCallbacks = function (aClickCallback, aDragCallback, aReleaseCallback) {
-        myClickCallback = aClickCallback;
-        myDragCallback = aDragCallback;
-        myReleaseCallback = aReleaseCallback;
-    };
-
-    var checkForDraggableState = function () {
+    var checkForDraggableState = function (aClickCallback, aDragCallback, aReleaseCallback) {
         if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && dragState === draggableStates.NEUTRAL) {
             dragState = draggableStates.CLICK;
             startingDragPosition = [myCamera.mouseWCX(), myCamera.mouseWCY()];
-            myClickCallback();
+            if (aClickCallback) {
+                aClickCallback()
+            }
         }
         if ((gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && dragState === draggableStates.CLICK)
             || dragState === draggableStates.DRAG) {
             dragState = draggableStates.DRAG;
-            myDragCallback();
+            if (aDragCallback) {
+                aDragCallback()
+            }
         }
         if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && dragState === draggableStates.DRAG) {
             dragState = draggableStates.RELEASE;
-            myReleaseCallback();
+            if (aReleaseCallback) {
+                aReleaseCallback()
+            }
         }
         if (dragState === draggableStates.RELEASE) {
             dragState = draggableStates.NEUTRAL;
@@ -66,10 +50,6 @@ MouseGestures.Drag = (function () {
     };
 
     return {
-        configureClickCallback: configureClickCallback,
-        configureDragCallback: configureDragCallback,
-        configureReleaseCallback: configureReleaseCallback,
-        configureAllCallbacks: configureAllCallbacks,
         checkForDraggableState: checkForDraggableState,
         getStartingDragPosition: getStartingDragPosition,
         getDragState: getDragState,

@@ -47,12 +47,6 @@ myCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
 MyGame.prototype.initialize = function () {
     MouseGestures.setCamera(myCamera);
-    MouseGestures.Drag.configureAllCallbacks(
-        this.selectRenderable.bind(this),
-        this.dragRenderable.bind(this),
-        this.releaseRenderable.bind(this)
-    );
-
     this.mGrid = new Grid(myCamera);
     this.testRenderable = new Renderable();
     this.testRenderable.getXform().setSize(1.9, 1.9);
@@ -95,9 +89,11 @@ MyGame.prototype.draw = function () {
 MyGame.prototype.update = function () {
     myCamera.update();  // to ensure proper interpolated movement effects
 
-    MouseGestures.Drag.checkForDraggableState();
-    MouseGestures.Flick.checkForFlick();
-    MouseGestures.DoubleClick.checkForDoubleClick(this.changeSelectedRenderableColor.bind(this));
+    MouseGestures.Drag.checkForDraggableState(
+        this.selectRenderable.bind(this),
+        this.dragRenderable.bind(this),
+        this.releaseRenderable.bind(this)
+    );
 
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.V))
     {
@@ -109,13 +105,6 @@ MyGame.prototype.update = function () {
     if (this.messageTimer > 0)
     {
         this.messageTimer--;
-    }
-};
-
-MyGame.prototype.changeSelectedRenderableColor = function() {
-    if (this.selectedRenderable)
-    {
-        this.selectedRenderable.setColor([0, 0, 1, 1]);
     }
 };
 
