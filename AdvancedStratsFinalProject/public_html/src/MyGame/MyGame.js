@@ -23,10 +23,7 @@ function MyGame() {
     this.selectedRenderable = null;
     this.testRenderable = null;
     this.testRenderable2 = null;
-    this.velocity = 0;
-    this.timer = 0;
-    this.doubleClick = false;
-    this.doubleClickTimer = 0;
+    this.messageTimer = 0;
 }
 
 var myCamera = new Camera(
@@ -50,7 +47,13 @@ myCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
 MyGame.prototype.initialize = function () {
     MouseGestures.setCamera(myCamera);
-    this.mGrid = new Grid();
+    MouseGestures.Drag.configureAllCallbacks(
+        this.selectRenderable.bind(this),
+        this.dragRenderable.bind(this),
+        this.releaseRenderable.bind(this)
+    );
+
+    this.mGrid = new Grid(myCamera);
     this.testRenderable = new Renderable();
     this.testRenderable.getXform().setSize(1.9, 1.9);
     this.testRenderable.setColor([1, 0, 0, 1]);
@@ -77,70 +80,42 @@ MyGame.prototype.initialize = function () {
 };
 
 MyGame.prototype.draw = function () {
-    // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-
     myCamera.setupViewProjection();
     this.mGrid.draw(myCamera);
     this.testRenderable.draw(myCamera);
     this.testRenderable2.draw(myCamera);
     this.mMsg.draw(myCamera);
-    if (this.timer > 0)
+    if (this.messageTimer > 0)
     {
         this.secondMsg.draw(myCamera);
     }
 };
 
-var blah = function() {
-    console.log('blah');
-}
-
-// The Update function, updates the application state. Make sure to _NOT_ draw
-// anything from this function!
 MyGame.prototype.update = function () {
     myCamera.update();  // to ensure proper interpolated movement effects
-    this.configureClickState();
-    if (this.doubleClick === true)
-    {
-        if (this.selectedRenderable)
-        {
-            this.selectedRenderable.setColor([0, 0, 1, 1]);
-        }
-    }
 
-    MouseGestures.configureDraggableState(this, blah);
-    // if (this.myDragGestures.dragState === draggableStates.CLICK) {
-    //     this.selectRenderable();
-    // }
-    if (MouseGestures.dragState === MouseGestures.getDragState().DRAG) {
-        this.dragRenderable();
-    }
-    if (MouseGestures.dragState === MouseGestures.getDragState().RELEASE) {
-        this.releaseRenderable();
-    }
-
+    MouseGestures.Drag.checkForDraggableState();
+    MouseGestures.Flick.checkForFlick();
+    MouseGestures.DoubleClick.checkForDoubleClick(this.changeSelectedRenderableColor.bind(this));
 
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.V))
     {
         this.unloadScene("Velocity");
     }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C))
-    {
-        this.unloadScene("DoubleClick");
-    }
     this.updateMessage();
     this.checkSecondMessage();
-    if (this.timer > 0)
+
+    if (this.messageTimer > 0)
     {
-        this.timer--;
+        this.messageTimer--;
     }
-    if (this.doubleClickTimer > 0)
+};
+
+MyGame.prototype.changeSelectedRenderableColor = function() {
+    if (this.selectedRenderable)
     {
-        this.doubleClickTimer--;
-    }
-    else
-    {
-        this.doubleClick = false;
+        this.selectedRenderable.setColor([0, 0, 1, 1]);
     }
 };
 
@@ -166,7 +141,8 @@ MyGame.prototype.releaseRenderable = function () {
         var cellPosition = this.mGrid.convertWCtoCellCoordinate(cellWCPosition[0], cellWCPosition[1]);
         var otherRenderable = this.renderableStorage[cellPosition[0]][cellPosition[1]];
 
-        var lastCellPosition = this.mGrid.convertWCtoCellCoordinate(this.myDragGestures.lastPos[0], this.myDragGestures.lastPos[1]);
+        var lastCellPosition = this.mGrid.convertWCtoCellCoordinate(MouseGestures.Drag.getStartingDragPosition()[0],
+            MouseGestures.Drag.getStartingDragPosition()[1]);
         var lastCellPositionToWC = this.mGrid.convertCellCoordinateToWC(lastCellPosition[0], lastCellPosition[1]);
 
 
@@ -187,33 +163,22 @@ MyGame.prototype.releaseRenderable = function () {
 };
 
 MyGame.prototype.updateMessage = function () {
-    var msg = "Drag State: " + MouseGestures.getDragState();
+    var msg = "Drag State: " + MouseGestures.Drag.getDragState();
     this.mMsg.setText(msg);
 };
 
 MyGame.prototype.checkSecondMessage = function () {
     var msg = "";
-    if (MouseGestures.getDragState() === MouseGestures.getDraggableStates().CLICK)
+    if (MouseGestures.Drag.getDragState() === MouseGestures.Drag.getDraggableStates().CLICK)
     {
         msg = "Mouse Clicked";
         this.timer = 60;
         this.secondMsg.setText(msg);
     }
-    else if (MouseGestures.getDragState() === MouseGestures.getDraggableStates().RELEASE)
+    else if (MouseGestures.Drag.getDragState() === MouseGestures.Drag.getDraggableStates().RELEASE)
     {
         msg = "Mouse Released";
         this.timer = 60;
         this.secondMsg.setText(msg);
-    }
-};
-
-MyGame.prototype.configureClickState = function () {
-    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.doubleClickTimer === 0) {
-        this.doubleClickTimer = 20;
-        //aDragFunction();
-    }
-    else if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && this.doubleClickTimer > 0)
-    {
-        this.doubleClick = true;
     }
 };

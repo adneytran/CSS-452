@@ -1,6 +1,7 @@
 "use strict";
 
-function Grid() {
+function Grid(aCamera) {
+    this.myCamera = aCamera;
     this.verticalLines = [];
     this.horizontalLines = [];
     for (var i = 0; i <=20; i += 2)
@@ -33,8 +34,8 @@ Grid.prototype.convertWCtoCellCoordinate = function (wcX, wcY) {
 };
 
 Grid.prototype.getCellWCPositionFromMousePosition = function () {
-    var x = myCamera.mouseWCX();
-    var y = myCamera.mouseWCY();
+    var x = this.myCamera.mouseWCX();
+    var y = this.myCamera.mouseWCY();
     x = Math.floor(x);
     y = Math.floor(y);
     if (x % 2 === 0) {
