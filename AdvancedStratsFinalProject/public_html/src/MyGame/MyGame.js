@@ -41,6 +41,10 @@ MyGame.prototype.unloadScene = function (type) {
     {
         nextLevel = new VelocityLevel();  // load the next level
     }
+    if (type === "Paint")
+    {
+        nextLevel = new Paint();  // load the next level
+    }
     gEngine.Core.startScene(nextLevel);
 };
 
@@ -109,6 +113,10 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.V))
     {
         this.unloadScene("Velocity");
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.P))
+    {
+        this.unloadScene("Paint");
     }
     this.updateMessage();
     this.checkSecondMessage();
