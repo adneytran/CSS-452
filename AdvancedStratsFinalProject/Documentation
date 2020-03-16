@@ -1,4 +1,3 @@
-Home:
 Mouse Gesture API Documentation
 
 By: Andy Tran and Kellan who didn't do shit
@@ -8,6 +7,7 @@ dragging, flicking, double clicking, and long pressing. The modules are built
 by breaking each gestures into distinct states of that gesture and allowing
 the user to pass in callback functions in each state.
 
+This API is to be used for the GTCS game engine made by the University of Washington.
 The API requires a camera to track mouse position with certain gestures, which
 can be set through the setCamera function. In order to "activate" each gesture,
 the corresponding check function (for example, checkForFlick for the flick gesture)
@@ -17,8 +17,10 @@ Files:
 MouseGestures.js
 MouseGestures_Drag.js
 MouseGestures_Flick.js
-MouseGestures_DubsClk.js (the naming of this file prevents adblockers from blocking the program)
+MouseGestures_DubsClk.js (naming the file DoubleClick will result in adblocks stopping the module from running)
 MouseGestures_LongPress.js
+
+
 
 Classes:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,3 +132,62 @@ Sets the key on which the long press gesture will be performed with. Keys are lo
 
 Parameters:
 aKey / Keys.value / the key to set
+
+
+END OF API DOCUMENTATION
+
+
+Tutorial:
+
+Introduction:
+
+This tutorial will show how to initialize the MouseGesture module and use it's functions. We will build a simple scene
+that manipulates a renderable object with the drag gesture.
+
+Getting Started:
+The tutorial assumes that you have the lastest version of the GTCS game engine found here:
+https://github.com/Apress/build-your-own-2d-game-engine/tree/master/BookSourceCode/Chapter10/10.3.LayerManager
+
+Replace the current MyGame file contents with the contents found in the TutorialGame file. Note that there is a single
+renderable object and a camera called testRenderable and mCamera respectively. We will use the MouseGestures API to
+manipulate the test renderable.
+
+Using the API:
+We will be using the drag gesture to move the renderable around and "fling" it around the game world. Note that the drag
+gesture has three phases: click, drag, and release. We shall define functions that will be called during some of those phases.
+We will ignore the click phase in this tutorial and focus on the other two phases.
+
+Start by defining what "dragging" will do to the renderable. We need the renderable to be where the mouse cursor is, so
+we define the drag function to be:
+
+VelocityLevel.prototype.dragRenderable = function () {
+    this.testRenderable.getXform().setPosition(myCamera.mouseWCX(), myCamera.mouseWCY());
+    this.direction = null;
+};
+The direction attribute will be set once the drag is in its "release" state.
+
+Next, we want to launch the square when the mouse button is released. The function for the release state will be:
+
+VelocityLevel.prototype.flingRenderable = function () {
+    var startingPos = MouseGestures.Drag.getStartingDragPosition();
+    var endingPos = [myCamera.mouseWCX(), myCamera.mouseWCY()];
+    var speedModifier = 1 / 30;
+    this.direction =  [(startingPos[0] - endingPos[0]) * speedModifier, (startingPos[1] - endingPos[1]) * speedModifier];
+};
+
+Note that we have used our Gesture API for the first time. The starting drag position is saved whenever the user clicks
+anywhere on the canvas.
+
+Now we have our drag and release functions set up, we can use the main drag function: MouseGestures.Drag.checkForDrag
+This function updates the state of the drag gesture and has callbacks for each of the states. Insert this line of code
+inside your update function:
+    MouseGestures.Drag.checkForDrag(null, this.dragRenderable.bind(this), this.flingRenderable.bind(this));
+For the purposes of flinging a single renderable around, we do not care about the click state. DragRenderable and FlingRenderable
+will be invoked on each frame when the drag state is in drag and release respectively.
+
+Now that we have a direction when the square is released, increment it by that much:
+
+this.testRenderable.getXform().incXPosBy(this.direction[0]);
+this.testRenderable.getXform().incYPosBy(this.direction[1]);
+
+And there you have it! We have created rudimentary slingshot using the Drag gesture.

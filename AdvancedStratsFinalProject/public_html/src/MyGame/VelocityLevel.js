@@ -16,7 +16,6 @@ function VelocityLevel() {
 
     this.mCamera = null;
     this.testRenderable = null;
-    this.direction = null;
 }
 
 gEngine.Core.inheritPrototype(VelocityLevel, Scene);
