@@ -23,3 +23,28 @@ Grid.prototype.draw = function(aCamera) {
         this.horizontalLines[i].draw(aCamera);
     }
 };
+
+Grid.prototype.convertCellCoordinateToWC = function (cellX, cellY) {
+    return [cellX * 2 + 1, cellY * 2 + 1];
+};
+
+Grid.prototype.convertWCtoCellCoordinate = function (wcX, wcY) {
+    return [Math.floor(wcX / 2), Math.floor(wcY / 2)];
+};
+
+Grid.prototype.getCellWCPositionFromMousePosition = function () {
+    var x = myCamera.mouseWCX();
+    var y = myCamera.mouseWCY();
+    x = Math.floor(x);
+    y = Math.floor(y);
+    if (x % 2 === 0) {
+        x++;
+    }
+    if (y % 2 === 0) {
+        y++;
+    }
+    if (x > 20 || y > 20 || x < 0 || y < 0) {
+        return null;
+    }
+    return [x, y];
+};

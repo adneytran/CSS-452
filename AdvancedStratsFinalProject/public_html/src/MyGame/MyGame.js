@@ -60,8 +60,8 @@ MyGame.prototype.initialize = function () {
     this.renderableStorage[5][5] = this.testRenderable;
     this.renderableStorage[3][7] = this.testRenderable2;
 
-    var newCell = this.convertCellCoordinateToWC(5, 5);
-    var newCell2 = this.convertCellCoordinateToWC(3, 7);
+    var newCell = this.mGrid.convertCellCoordinateToWC(5, 5);
+    var newCell2 = this.mGrid.convertCellCoordinateToWC(3, 7);
     this.testRenderable.getXform().setPosition(newCell[0], newCell[1]);
     this.testRenderable2.getXform().setPosition(newCell2[0], newCell2[1]);
 
@@ -144,35 +144,10 @@ MyGame.prototype.update = function () {
     }
 };
 
-MyGame.prototype.convertCellCoordinateToWC = function (cellX, cellY) {
-    return [cellX * 2 + 1, cellY * 2 + 1];
-};
-
-MyGame.prototype.convertWCtoCellCoordinate = function (wcX, wcY) {
-    return [Math.floor(wcX / 2), Math.floor(wcY / 2)];
-};
-
-MyGame.prototype.getCellWCPositionFromMousePosition = function () {
-    var x = myCamera.mouseWCX();
-    var y = myCamera.mouseWCY();
-    x = Math.floor(x);
-    y = Math.floor(y);
-    if (x % 2 === 0) {
-        x++;
-    }
-    if (y % 2 === 0) {
-        y++;
-    }
-    if (x > 20 || y > 20 || x < 0 || y < 0) {
-        return null;
-    }
-    return [x, y];
-};
-
 MyGame.prototype.selectRenderable = function () {
-    var cellPosition = this.getCellWCPositionFromMousePosition();
+    var cellPosition = this.mGrid.getCellWCPositionFromMousePosition();
     if (cellPosition) {
-        var cellCoordinate = this.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
+        var cellCoordinate = this.mGrid.convertWCtoCellCoordinate(cellPosition[0], cellPosition[1]);
         if (this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]]) {
             this.selectedRenderable = this.renderableStorage[cellCoordinate[0]][cellCoordinate[1]];
         }
@@ -187,12 +162,12 @@ MyGame.prototype.dragRenderable = function () {
 
 MyGame.prototype.releaseRenderable = function () {
     if (this.selectedRenderable) {
-        var cellWCPosition = this.getCellWCPositionFromMousePosition();
-        var cellPosition = this.convertWCtoCellCoordinate(cellWCPosition[0], cellWCPosition[1]);
+        var cellWCPosition = this.mGrid.getCellWCPositionFromMousePosition();
+        var cellPosition = this.mGrid.convertWCtoCellCoordinate(cellWCPosition[0], cellWCPosition[1]);
         var otherRenderable = this.renderableStorage[cellPosition[0]][cellPosition[1]];
 
-        var lastCellPosition = this.convertWCtoCellCoordinate(this.myDragGestures.lastPos[0], this.myDragGestures.lastPos[1]);
-        var lastCellPositionToWC = this.convertCellCoordinateToWC(lastCellPosition[0], lastCellPosition[1]);
+        var lastCellPosition = this.mGrid.convertWCtoCellCoordinate(this.myDragGestures.lastPos[0], this.myDragGestures.lastPos[1]);
+        var lastCellPositionToWC = this.mGrid.convertCellCoordinateToWC(lastCellPosition[0], lastCellPosition[1]);
 
 
         if (otherRenderable) {
