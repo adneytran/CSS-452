@@ -2,7 +2,7 @@
 
 MouseGestures.DoubleClick = (function () {
     var myCountDownTimer = 0;
-    const DOUBLE_CLICK_TIMER = 20;
+    var doubleClickTimer = 20;
 
     var _countDownTimer = function () {
         if (myCountDownTimer > 0) {
@@ -25,12 +25,17 @@ MouseGestures.DoubleClick = (function () {
             }
         }
         if (_timerShouldStart()) {
-            myCountDownTimer = DOUBLE_CLICK_TIMER;
+            myCountDownTimer = doubleClickTimer;
         }
         _countDownTimer();
     };
 
+    var setDoubleClickTimer = function (aTime) {
+        doubleClickTimer = aTime;
+    };
+
     return {
-        checkForDoubleClick: checkForDoubleClick
+        checkForDoubleClick: checkForDoubleClick,
+        setDoubleClickTimer: setDoubleClickTimer
     }
 })();

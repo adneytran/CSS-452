@@ -4,17 +4,14 @@ MouseGestures.LongPress = (function () {
     var myCountDownTimer = 0;
     var longPressDuration = 100;
     var longPressAchieved = false;
-
-    var setLongPressDuration = function (aDuration) {
-        longPressDuration = aDuration;
-    };
+    var myKey = gEngine.Input.mouseButton.Left;
 
     var _timerShouldStart = function () {
-        return gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && myCountDownTimer === 0;
+        return gEngine.Input.isButtonClicked(myKey) && myCountDownTimer === 0;
     };
 
     var _checkIfButtonHeld = function () {
-        if (myCountDownTimer > 0 && gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left)) {
+        if (myCountDownTimer > 0 && gEngine.Input.isButtonPressed(myKey)) {
             myCountDownTimer--;
             if (myCountDownTimer === 0) {
                 longPressAchieved = true;
@@ -28,15 +25,25 @@ MouseGestures.LongPress = (function () {
         }
         _checkIfButtonHeld();
 
-        if (myCountDownTimer === 0 && gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && longPressAchieved) {
+        if (myCountDownTimer === 0 && gEngine.Input.isButtonPressed(myKey) && longPressAchieved) {
             if (aCallback) {
                 aCallback();
             }
             longPressAchieved = false;
         }
     };
+
+    var setLongPressDuration = function (aDuration) {
+        longPressDuration = aDuration;
+    };
+
+    var setKeybind = function(aKey) {
+        myKey = aKey;
+    };
+
     return {
+        checkForLongPress: checkForLongPress,
         setLongPressDuration: setLongPressDuration,
-        checkForLongPress: checkForLongPress
+        setKeybind: setKeybind
     };
 })();

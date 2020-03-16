@@ -6,11 +6,11 @@ MouseGestures.Flick = (function () {
     var time = 0;
     var startingPosition = null;
     var isFlicked = false;
-    var myKey = gEngine.Input.mouseButton.Left;
+    var myFlickKey = gEngine.Input.mouseButton.Left;
 
 
     var _checkForInitialClick = function () {
-        if (gEngine.Input.isButtonClicked(myKey)) {
+        if (gEngine.Input.isButtonClicked(myFlickKey)) {
             distance = 0;
             direction = [0, 0];
             time = 0;
@@ -20,13 +20,13 @@ MouseGestures.Flick = (function () {
     };
 
     var _checkIfMouseHeld = function () {
-        if (gEngine.Input.isButtonPressed(myKey)) {
+        if (gEngine.Input.isButtonPressed(myFlickKey)) {
             time += gEngine.GameLoop.getUpdateIntervalInSeconds();
         }
     };
 
     var _checkForMouseRelease = function () {
-        if (gEngine.Input.isButtonReleased(myKey)) {
+        if (gEngine.Input.isButtonReleased(myFlickKey)) {
             var endingPosition = [myCamera.mouseWCX(), myCamera.mouseWCY()];
             distance = _getDistance(endingPosition);
             direction = _getDirection(endingPosition);
@@ -66,7 +66,7 @@ MouseGestures.Flick = (function () {
     };
 
     var setKeybind = function(aKey) {
-        myKey = aKey;
+        myFlickKey = aKey;
     };
 
     return {

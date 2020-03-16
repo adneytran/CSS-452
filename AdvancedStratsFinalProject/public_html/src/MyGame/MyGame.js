@@ -91,7 +91,7 @@ MyGame.prototype.draw = function () {
 MyGame.prototype.update = function () {
     myCamera.update();  // to ensure proper interpolated movement effects
 
-    MouseGestures.Drag.checkForDraggableState(
+    MouseGestures.Drag.checkForDrag(
         this.selectRenderable.bind(this),
         this.dragRenderable.bind(this),
         this.releaseRenderable.bind(this)

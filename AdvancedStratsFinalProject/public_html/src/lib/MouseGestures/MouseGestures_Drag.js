@@ -1,7 +1,7 @@
 "use strict";
 
 MouseGestures.Drag = (function () {
-    const draggableStates = {
+    const draggableState = {
         NEUTRAL: "neutral",
         CLICK: "click",
         DRAG: "drag",
@@ -9,33 +9,33 @@ MouseGestures.Drag = (function () {
     };
 
     var startingDragPosition = [];
-    var dragState = draggableStates.NEUTRAL;
-    var myKey = gEngine.Input.mouseButton.Left;
+    var dragState = draggableState.NEUTRAL;
+    var myDragKey = gEngine.Input.mouseButton.Left;
 
 
-    var checkForDraggableState = function (aClickCallback, aDragCallback, aReleaseCallback) {
-        if (gEngine.Input.isButtonClicked(myKey) && dragState === draggableStates.NEUTRAL) {
-            dragState = draggableStates.CLICK;
+    var checkForDrag = function (aClickCallback, aDragCallback, aReleaseCallback) {
+        if (gEngine.Input.isButtonClicked(myDragKey) && dragState === draggableState.NEUTRAL) {
+            dragState = draggableState.CLICK;
             startingDragPosition = [myCamera.mouseWCX(), myCamera.mouseWCY()];
             if (aClickCallback) {
                 aClickCallback()
             }
         }
-        if ((gEngine.Input.isButtonPressed(myKey) && dragState === draggableStates.CLICK)
-            || dragState === draggableStates.DRAG) {
-            dragState = draggableStates.DRAG;
+        if ((gEngine.Input.isButtonPressed(myDragKey) && dragState === draggableState.CLICK)
+            || dragState === draggableState.DRAG) {
+            dragState = draggableState.DRAG;
             if (aDragCallback) {
                 aDragCallback()
             }
         }
-        if (gEngine.Input.isButtonReleased(myKey) && dragState === draggableStates.DRAG) {
-            dragState = draggableStates.RELEASE;
+        if (gEngine.Input.isButtonReleased(myDragKey) && dragState === draggableState.DRAG) {
+            dragState = draggableState.RELEASE;
             if (aReleaseCallback) {
                 aReleaseCallback()
             }
         }
-        if (dragState === draggableStates.RELEASE) {
-            dragState = draggableStates.NEUTRAL;
+        if (dragState === draggableState.RELEASE) {
+            dragState = draggableState.NEUTRAL;
         }
     };
 
@@ -48,15 +48,15 @@ MouseGestures.Drag = (function () {
     };
 
     var getDraggableStates = function () {
-        return draggableStates;
+        return draggableState;
     };
 
     var setKeybind = function (aKey) {
-        myKey = aKey;
+        myDragKey = aKey;
     };
 
     return {
-        checkForDraggableState: checkForDraggableState,
+        checkForDrag: checkForDrag,
         getStartingDragPosition: getStartingDragPosition,
         getDragState: getDragState,
         getDraggableStates: getDraggableStates,

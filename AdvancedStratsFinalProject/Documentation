@@ -14,8 +14,119 @@ the corresponding check function (for example, checkForFlick for the flick gestu
 must be called in the current scene's update function.
 
 Files:
-MouseGestures
-MouseGestures_Drag
+MouseGestures.js
+MouseGestures_Drag.js
+MouseGestures_Flick.js
+MouseGestures_DubsClk.js (the naming of this file prevents adblockers from blocking the program)
+MouseGestures_LongPress.js
+
+Classes:
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+MouseGestures:
+Contains attributes needed to perform gestures
+
+Methods:
+(static) setCamera(aCamera) => {void}
+Sets a camera for the gestures to be tracked from
+
+Parameters:
+aCamera / Camera / The camera the gestures use
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+MouseGestures_Drag:
+
+Gesture that is defined by a button press, followed by the holding of that button, and ending with the release of that button
+
+Methods:
+
+(static) checkForDrag(aClickCallback, aDragCallback, aReleaseCallback) => {void}
+The method used in Scene.Update that checks for the drag gesture. The method updates the drag state each frame and calls
+the appropriate callback function.
+
+Parameters:
+aClickCallback / function / The callback used when the drag key is clicked
+aDragCallback / function / The callback the gestures uses while the drag key is pressed
+aReleaseCallback / function / The callback the gestures uses when the drag key is released
+
+(static) getStartingDragPosition() => {[x, y]} Position Array
+Returns the location where the drag button is initially clicked
+
+(static) getDragState() => {DraggableState.value}
+Returns the current drag state
+
+(static) getDraggableStates() => {DraggableState}
+Returns the draggable states that define the drag gesture
+
+(static) setKeybind(aKey) => {void}
+Sets the key on which the drag gesture will be performed with. Keys are located in the gEngine.Input class
+
+Parameters:
+aKey / Keys.value / the key to set
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 MouseGestures_Flick
+Gesture that tracks mouse movement in a time period
+
+Methods:
+
+(static) checkForFlick() => {void}
+The method used in Scene.Update that checks for the flick gesture. The time between the flick key being clicked and
+then released, along with the mouse displacement between those two points are tracked. When the flick key is pressed,
+the speed and direction reset.
+
+(static) getFlickDirection() => {[x. y]} Position Array
+returns a normalized 2-D vector pointing from the start of the flick to the end
+
+(static) getFlickSpeed() => {Number}
+returns the speed on which the mouse traveled during the flick
+
+(static) hasBeenFlicked() => {boolean}
+returns true if the flick button is released.
+
+(static) setKeybind(aKey) => {void}
+Sets the key on which the flick gesture will be performed with. Keys are located in the gEngine.Input class
+
+Parameters:
+aKey / Keys.value / the key to set
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 MouseGestures_DoubleClick
+Gesture that checks if the left mouse button has been clicked twice in a given amount of time
+
+Methods:
+
+(static) checkForFlick(aCallback) => {void}
+The method used in Scene.Update that checks for the double click gesture.
+
+Parameters:
+aCallback / function / The callback that is invoked when there is successful double click event
+
+(static) setDoubleClickTimer(aTime) => {void}
+sets how long to wait for a second click after the first one.
+
+Parameters:
+aTime / Number / The time in number of frames
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 MouseGestures_LongPress
+Gesture that tracks the holding of the long press button over a period of time
+
+Methods:
+
+(static) checkForLongPress(aCallback) => {void}
+The method used in Scene.Update that checks for the long press gesture.
+
+Parameters:
+aCallback / function / The callback that is invoked when there is successful long press event
+
+(static) setLongPressDuration(aDuration) => {void}
+Sets the amount of time needed for a long press to activate
+
+Parameters:
+aDuration / Number / The time in frames
+
+(static) setKeybind(aKey) => {void}
+Sets the key on which the long press gesture will be performed with. Keys are located in the gEngine.Input class
+
+Parameters:
+aKey / Keys.value / the key to set

@@ -67,7 +67,7 @@ VelocityLevel.prototype.update = function () {
         this.unloadScene("MyGame");
     }
     MouseGestures.Flick.checkForFlick();
-    MouseGestures.Drag.checkForDraggableState(null, this.dragRenderable.bind(this), this.flingRenderable.bind(this));
+    MouseGestures.Drag.checkForDrag(null, this.dragRenderable.bind(this), this.flingRenderable.bind(this));
     if (this.direction) {
         this.testRenderable.getXform().incXPosBy(this.direction[0]);
         this.testRenderable.getXform().incYPosBy(this.direction[1]);
