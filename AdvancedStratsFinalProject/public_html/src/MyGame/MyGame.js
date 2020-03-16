@@ -10,6 +10,7 @@
 /* find out more about jslint: http://www.jslint.com/help.html */
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
+//document.addEventListener('contextmenu', event => event.preventDefault());
 
 function MyGame() {
     this.mGrid = null;
@@ -47,6 +48,7 @@ myCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 
 MyGame.prototype.initialize = function () {
     MouseGestures.setCamera(myCamera);
+    MouseGestures.Flick.setKeybind(gEngine.Input.mouseButton.Right);
     this.mGrid = new Grid(myCamera);
     this.testRenderable = new Renderable();
     this.testRenderable.getXform().setSize(1.9, 1.9);
@@ -94,6 +96,15 @@ MyGame.prototype.update = function () {
         this.dragRenderable.bind(this),
         this.releaseRenderable.bind(this)
     );
+
+    MouseGestures.Flick.checkForFlick();
+    if (MouseGestures.Flick.hasBeenFlicked()) {
+        var direction = MouseGestures.Flick.getFlickDirection();
+        var speed = -MouseGestures.Flick.getFlickSpeed();
+        var theCameraLocation = myCamera.getWCCenter();
+        var theNewCameraLocation = [theCameraLocation[0] + direction[0] * speed / 50, theCameraLocation[1] + direction[1] * speed / 50];
+        myCamera.setWCCenter(theNewCameraLocation[0], theNewCameraLocation[1]);
+    }
 
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.V))
     {

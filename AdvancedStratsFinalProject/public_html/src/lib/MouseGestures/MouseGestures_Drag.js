@@ -10,23 +10,25 @@ MouseGestures.Drag = (function () {
 
     var startingDragPosition = [];
     var dragState = draggableStates.NEUTRAL;
+    var myKey = gEngine.Input.mouseButton.Left;
+
 
     var checkForDraggableState = function (aClickCallback, aDragCallback, aReleaseCallback) {
-        if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left) && dragState === draggableStates.NEUTRAL) {
+        if (gEngine.Input.isButtonClicked(myKey) && dragState === draggableStates.NEUTRAL) {
             dragState = draggableStates.CLICK;
             startingDragPosition = [myCamera.mouseWCX(), myCamera.mouseWCY()];
             if (aClickCallback) {
                 aClickCallback()
             }
         }
-        if ((gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && dragState === draggableStates.CLICK)
+        if ((gEngine.Input.isButtonPressed(myKey) && dragState === draggableStates.CLICK)
             || dragState === draggableStates.DRAG) {
             dragState = draggableStates.DRAG;
             if (aDragCallback) {
                 aDragCallback()
             }
         }
-        if (gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left) && dragState === draggableStates.DRAG) {
+        if (gEngine.Input.isButtonReleased(myKey) && dragState === draggableStates.DRAG) {
             dragState = draggableStates.RELEASE;
             if (aReleaseCallback) {
                 aReleaseCallback()
@@ -49,10 +51,15 @@ MouseGestures.Drag = (function () {
         return draggableStates;
     };
 
+    var setKeybind = function (aKey) {
+        myKey = aKey;
+    };
+
     return {
         checkForDraggableState: checkForDraggableState,
         getStartingDragPosition: getStartingDragPosition,
         getDragState: getDragState,
-        getDraggableStates: getDraggableStates
+        getDraggableStates: getDraggableStates,
+        setKeybind: setKeybind
     }
 }());

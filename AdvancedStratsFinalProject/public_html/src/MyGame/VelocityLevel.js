@@ -16,6 +16,7 @@ function VelocityLevel() {
 
     this.mCamera = null;
     this.testRenderable = null;
+    this.direction = null;
 }
 
 gEngine.Core.inheritPrototype(VelocityLevel, Scene);
@@ -51,19 +52,50 @@ VelocityLevel.prototype.draw = function () {
 
     this.mCamera.setupViewProjection();
     this.testRenderable.draw(this.mCamera);
+    if (MouseGestures.Drag.getDragState() === MouseGestures.Drag.getDraggableStates().DRAG) {
+        var startingPos = MouseGestures.Drag.getStartingDragPosition();
+        var endingPos = [myCamera.mouseWCX(), myCamera.mouseWCY()];
+        var shotLine = new LineRenderable(startingPos[0], startingPos[1], endingPos[0], endingPos[1]);
+        shotLine.draw(this.mCamera);
+    }
 };
 
+var time = 0;
 VelocityLevel.prototype.update = function () {
     this.mCamera.update();  // to ensure proper interpolated movement effects
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
         this.unloadScene("MyGame");
     }
     MouseGestures.Flick.checkForFlick();
-    if (MouseGestures.Flick.hasBeenFlicked()) {
-        var direction = MouseGestures.Flick.getFlickDirection();
-        var speed = MouseGestures.Flick.getFlickSpeed() / 100;
-        this.testRenderable.getXform().incXPosBy(direction[0] * speed);
-        this.testRenderable.getXform().incYPosBy(direction[1] * speed);
+    MouseGestures.Drag.checkForDraggableState(null, this.dragRenderable.bind(this), this.flingRenderable.bind(this));
+    if (this.direction) {
+        this.testRenderable.getXform().incXPosBy(this.direction[0]);
+        this.testRenderable.getXform().incYPosBy(this.direction[1]);
     }
+    MouseGestures.LongPress.checkForLongPress(function() {
+        time = 120;
+    });
+    this.wobbleRenderable(time);
+    time--;
+};
+
+VelocityLevel.prototype.dragRenderable = function () {
+    this.testRenderable.getXform().setPosition(myCamera.mouseWCX(), myCamera.mouseWCY());
+    this.direction = null;
+};
+
+VelocityLevel.prototype.flingRenderable = function () {
+    var startingPos = MouseGestures.Drag.getStartingDragPosition();
+    var endingPos = [myCamera.mouseWCX(), myCamera.mouseWCY()];
+    this.direction =  [(startingPos[0] - endingPos[0]) / 30, (startingPos[1] - endingPos[1]) / 30];
+};
+
+VelocityLevel.prototype.wobbleRenderable = function(time) {
+    if (time <= 0) {
+        return;
+    }
+    var random = Math.random() * 2 - 1;
+    this.testRenderable.getXform().setHeight(1.9 + random);
+    this.testRenderable.getXform().setWidth(1.9 + random);
 
 };
